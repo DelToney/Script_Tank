@@ -105,8 +105,10 @@ public class LoginActivityST extends AppCompatActivity {
                 pwdEditText.requestFocus();
                 return;
             case "SUCCESS":
-                errorDisplay.setVisibility(View.VISIBLE);
-                errorDisplay.setText(getString(R.string.login_succeeded));
+                //errorDisplay.setVisibility(View.VISIBLE);
+                //errorDisplay.setText(getString(R.string.login_succeeded));
+                Intent intent = new Intent(this, UsersDisplayActivity.class);
+                startActivity(intent);
                 return;
             default:
                 errorDisplay.setVisibility(View.VISIBLE);
@@ -127,7 +129,7 @@ public class LoginActivityST extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     System.out.println("Success"); //the login was successful
-                    handleResponse("Success");
+                    handleResponse("SUCCESS");
 
                 } else {
                     FirebaseAuthException fbe = (FirebaseAuthException) task.getException();

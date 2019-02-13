@@ -73,6 +73,9 @@ public class CreateAccountActivity extends AppCompatActivity {
             intent.putExtra("name", nameEditText.getText().toString());
             intent.putExtra("type", myListener.getUserChoice());
             startService(intent);
+            intent = new Intent(this, UsersDisplayActivity.class);
+            startActivity(intent);
+            finish(); //must put this in to kill activity off stack, so user cannot go back.
         } else {
             System.out.println(code);
             switch (code) {
