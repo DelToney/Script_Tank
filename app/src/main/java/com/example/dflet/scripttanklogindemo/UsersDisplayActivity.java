@@ -1,10 +1,14 @@
 package com.example.dflet.scripttanklogindemo;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,12 +30,24 @@ public class UsersDisplayActivity extends AppCompatActivity {
     private ArrayList<String> data;
     private ArrayAdapter<String> adapter;
     private ListView userList;
+    private TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_display);
+        tv = findViewById(R.id.user_data);
+        Intent recvIntent = getIntent();
+        if (recvIntent.getExtras() != null) {
+            User userProf = (User) recvIntent.getSerializableExtra("USER_PROFILE");
+            CharSequence seq = userProf.name + " " + userProf.email + " " + userProf.key + " " +
+                    userProf.type;
+            tv.setText(seq);
+
+
+        }
         userList = findViewById(R.id.userList);
+
         data = new ArrayList<>();
         adapter = new ArrayAdapter<>(UsersDisplayActivity.this,
                 R.layout.list_item, data);
@@ -53,7 +69,24 @@ public class UsersDisplayActivity extends AppCompatActivity {
                 }
             }
         });
+
+        final Button logOutButton = findViewById(R.id.logOutButton);
+        logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logOut();
+            }
+        });
     }
+
+    private void logOut() {
+        this.deleteFile(getString(R.string.user_prof_file_name));
+        Intent intent = new Intent(this, WelcomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
 
     private void updateUserAdapter(ArrayList received) {
         for (Object datum : received) {

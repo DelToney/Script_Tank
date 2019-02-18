@@ -21,4 +21,13 @@
     <string name="phone_prompt">Phone Number</string>
     <string name="acct_type_prompt">Choose Account Type</string>
     <string name="error_pwd_not_equal">Passwords must match</string>
+    <string name="view_extracts">View Extracts</string>
+    <string name="log_out">Log Out</string>
+
+    <string name="user_prof_file_name">user_prof</string>
+    <string name="user_profile_intent">USER_PROFILE</string>
+    <string name="upload_files">Upload Files</string>
+    <string name="upload_file">Upload File</string>
+    <string name="choose_file">Choose File</string>
+    <string name="contact_writers">Contact Writers</string>
 </resources>

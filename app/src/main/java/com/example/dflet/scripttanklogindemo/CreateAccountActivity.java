@@ -1,6 +1,7 @@
 package com.example.dflet.scripttanklogindemo;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.lang.reflect.Array;
 
@@ -30,7 +32,9 @@ public class CreateAccountActivity extends AppCompatActivity {
     private Spinner spinner;
     private MyListener myListener;
     private EditText phoneNumberEditText, confirmPwdEditText, pwdOriginalEditText, emailEditText, nameEditText;
+    private String phone, email, name, type;
     private FirebaseAuth fbAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,13 +71,16 @@ public class CreateAccountActivity extends AppCompatActivity {
         //if the registration is successful, call the DatabaseWriteService to then upload
         //user object to users database
         if (code.equals("Success")) {
+            FirebaseInstanceId fb_id = FirebaseInstanceId.getInstance();
+            String id = fb_id.getId();
+            String newKey = fbAuth.getCurrentUser().getUid();
+            User userProfile = new User(email, phone, name, type, id);
             Intent intent = new Intent(this, DatabaseWriteService.class);
-            intent.putExtra("email", emailEditText.getText().toString());
-            intent.putExtra("number", phoneNumberEditText.getText().toString());
-            intent.putExtra("name", nameEditText.getText().toString());
-            intent.putExtra("type", myListener.getUserChoice());
+            intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
+            intent.putExtra("DO_NOT_WRITE_TO_DB", false);
             startService(intent);
-            intent = new Intent(this, UsersDisplayActivity.class);
+            intent = new Intent(this, HomeActivity.class);
+            intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
             startActivity(intent);
             finish(); //must put this in to kill activity off stack, so user cannot go back.
         } else {
@@ -99,7 +106,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     private void createAccount() {
         fbAuth.signOut();
-        String pwd, confirmPwd, email, phoneNumber, type, name;
+        String pwd, confirmPwd;
 
         emailEditText.setError(null);
         pwdOriginalEditText.setError(null);
@@ -110,7 +117,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         pwd = pwdOriginalEditText.getText().toString();
         confirmPwd = confirmPwdEditText.getText().toString();
         email = emailEditText.getText().toString();
-        phoneNumber = phoneNumberEditText.getText().toString();
+        phone = phoneNumberEditText.getText().toString();
         name = nameEditText.getText().toString();
         type = myListener.getUserChoice();
 

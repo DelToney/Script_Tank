@@ -38,11 +38,13 @@ public class WelcomeActivity extends AppCompatActivity {
     private void launchLoginActivity() {
         Intent intent = new Intent(this, LoginActivityST.class);
         this.startActivity(intent);
+        finish();
     }
 
     private void launchCreateAcctActivity() {
         Intent intent = new Intent(this, CreateAccountActivity.class);
         this.startActivity(intent);
+        finish();
     }
 
 }
