@@ -16,6 +16,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity
+            android:name=".ViewUploadsActivity"
+            android:label="@string/title_activity_view_uploads"
+            android:theme="@style/NoActionBar"></activity>
+
         <service
             android:name=".MyFirebaseMessagingService"
             tools:ignore="ExportedService">
