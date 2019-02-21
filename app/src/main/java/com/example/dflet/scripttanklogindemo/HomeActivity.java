@@ -28,7 +28,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Intent launchIntent = getIntent();
         m_User = (User)launchIntent.getSerializableExtra(getString(R.string.user_profile_intent));
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
@@ -36,10 +36,19 @@ public class HomeActivity extends AppCompatActivity {
         m_Layout = findViewById(R.id.drawer_layout);
         m_NavigationView = findViewById(R.id.nav_view);
         setNavMenu();
+
+
+
+
+        //Navigation button logic
         m_NavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
+
+
+
+                        //publisher buttons
                     case R.id.ViewExtracts:
                         menuItem.setChecked(true);
                         m_Layout.closeDrawers();
@@ -49,15 +58,35 @@ public class HomeActivity extends AppCompatActivity {
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
+
+
+
+                        //writer buttons
+                    case R.id.ViewUploads:
+                        menuItem.setChecked(true);
+                        m_Layout.closeDrawers();
+                        intent = new Intent(HomeActivity.this,
+                                ViewUploadsActivity.class);
+                        intent.putExtra(getString(R.string.user_profile_intent), (Parcelable) m_User);
+                        menuItem.setChecked(false);
+                        startActivity(intent);
+                        return true;
+
                     case R.id.UploadFiles:
                         menuItem.setChecked(true);
                         m_Layout.closeDrawers();
                         intent = new Intent(HomeActivity.this,
                                 UploadFileActivity.class);
                         intent.putExtra(getString(R.string.user_profile_intent), (Parcelable) m_User);
+                        intent.putExtra(getString(R.string.navMenu_intent), (Parcelable) m_NavigationView);
+                        intent.putExtra(getString(R.string.layout_intent), (Parcelable) m_Layout);
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
+
+
+
+                        //editor Buttons
                     case R.id.contactWriters:
                         menuItem.setChecked(true);
                         m_Layout.closeDrawers();
@@ -67,6 +96,8 @@ public class HomeActivity extends AppCompatActivity {
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
+
+
                     default:
                         return true;
                 }

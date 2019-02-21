@@ -40,7 +40,7 @@ public class User implements Parcelable, Serializable {
 
     @Override
     public int describeContents() {
-        return 0;
+        return 0; //TODO
     }
 
     @Override
