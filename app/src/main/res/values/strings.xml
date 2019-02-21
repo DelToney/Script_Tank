@@ -25,10 +25,22 @@
     <string name="log_out">Log Out</string>
 
     <string name="user_prof_file_name">user_prof</string>
+
+
+    //intent stuff
     <string name="user_profile_intent">USER_PROFILE</string>
+    <string name="layout_intent">com.android:ScriptTank.layout</string>
+    <string name="navMenu_intent">com.android:ScriptTank.navigationMenu</string>
+
+
+
+    <string name="uploads_toolbar">Your Uploads</string>
     <string name="upload_files">Upload Files</string>
     <string name="upload_file">Upload File</string>
-    <string name="view_uploads">View Your Uploads</string>
+    <string name="view_uploads">View Your Uploads</string
+
+
+        >
     <string name="choose_file">Choose File</string>
     <string name="contact_writers">Contact Writers</string>
     <string name="title_activity_view_uploads">ViewUploadsActivity</string>

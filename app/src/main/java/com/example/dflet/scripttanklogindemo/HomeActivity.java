@@ -28,7 +28,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Intent launchIntent = getIntent();
         m_User = (User)launchIntent.getSerializableExtra(getString(R.string.user_profile_intent));
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         this.setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
@@ -78,6 +78,8 @@ public class HomeActivity extends AppCompatActivity {
                         intent = new Intent(HomeActivity.this,
                                 UploadFileActivity.class);
                         intent.putExtra(getString(R.string.user_profile_intent), (Parcelable) m_User);
+                        intent.putExtra(getString(R.string.navMenu_intent), (Parcelable) m_NavigationView);
+                        intent.putExtra(getString(R.string.layout_intent), (Parcelable) m_Layout);
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
