@@ -1,3 +1,53 @@
 <resources>
-    <string name="app_name">Script_Tank</string>
+    <string name="app_name">ScriptTankLoginDemo</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="login_failed">LOGIN_FAILED</string>
+    <string name="login_succeeded">LOGIN SUCCEEDED</string>
+    <string name="user_not_found">No user was found</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_account_disabled">This account has been disabled</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="createAccount">Create Account</string>
+    <string name="pwd_prompt">Password</string>
+    <string name="password_confirm">Confirm Password</string>
+    <string name="phone_prompt">Phone Number</string>
+    <string name="acct_type_prompt">Choose Account Type</string>
+    <string name="error_pwd_not_equal">Passwords must match</string>
+    <string name="view_extracts">View Extracts</string>
+    <string name="log_out">Log Out</string>
+
+    <string name="user_prof_file_name">user_prof</string>
+
+
+    //intent stuff
+    <string name="user_profile_intent">USER_PROFILE</string>
+    <string name="layout_intent">com.android:ScriptTank.layout</string>
+    <string name="navMenu_intent">com.android:ScriptTank.navigationMenu</string>
+
+
+
+    <string name="uploads_toolbar">Your Uploads</string>
+    <string name="upload_files">Upload Files</string>
+    <string name="upload_file">Upload File</string>
+    <string name="view_uploads">View Your Uploads</string
+
+
+        >
+    <string name="choose_file">Choose File</string>
+    <string name="contact_writers">Contact Writers</string>
+    <string name="title_activity_view_uploads">ViewUploadsActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 </resources>

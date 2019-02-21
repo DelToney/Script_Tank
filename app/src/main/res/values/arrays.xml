@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="account_types">
+        <item>Writer</item>
+        <item>Editor</item>
+        <item>Publisher</item>
+    </string-array>
+</resources>

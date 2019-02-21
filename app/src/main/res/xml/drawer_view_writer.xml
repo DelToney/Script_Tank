@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/ViewUploads"
+            android:title="@string/view_uploads"/>
+        <item
+            android:id="@+id/UploadFiles"
+            android:title="@string/upload_files" />
+    </group>
+</menu>
