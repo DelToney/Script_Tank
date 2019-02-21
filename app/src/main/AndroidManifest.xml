@@ -16,6 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".writer_search"></activity>
+
         <service
             android:name=".MyFirebaseMessagingService"
             tools:ignore="ExportedService">
