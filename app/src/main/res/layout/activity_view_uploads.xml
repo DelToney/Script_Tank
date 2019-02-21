@@ -33,7 +33,6 @@
             tools:listitem="@layout/placeholder_item" />
 
 
-
     </RelativeLayout>
 
 

@@ -21,7 +21,11 @@ exports.grabUsersFiles = functions.https.onCall((data, context) => {
     var users = [];
     var file_names = [];
     var db_ids = [];
+
+    //debugging Stuff
     console.log("L:/", "CALLED_USERS_FILES_FUNCTION", context.auth.uid);
+
+
     const fb = admin.database().ref("/Users/");
     return fb.once('value').then(dataSnapshot => {
         dataSnapshot.forEach(ds => {
