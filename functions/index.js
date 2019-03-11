@@ -59,11 +59,10 @@ exports.sendWriterRequest = functions.https.onCall((data, context) => {
 
     const dest_key = data.dest_key;
     console.log("L:/", "CALLED_SEND_REQUEST_TO_WRITER", dest_key);
-    const path = "/Users/" + dest_key + "/fb_id"
+    const path = "/Users/" + dest_key + "/token"
     const receiver = admin.database().ref(path).once('value');
     return Promise.all([receiver]).then(result_data => {
         const dest_id = result_data[0].val();
-        const token = data.token;
         console.log("L:/", "THE DEST_ID IS", dest_id);
         const payload = {
                 notification: {
@@ -72,7 +71,7 @@ exports.sendWriterRequest = functions.https.onCall((data, context) => {
                 }
         };
 
-        return admin.messaging().sendToDevice(token, payload)
+        return admin.messaging().sendToDevice(dest_id, payload)
         .then(function (response) {
             console.log("Successfully sent a message", response);
             return response;
