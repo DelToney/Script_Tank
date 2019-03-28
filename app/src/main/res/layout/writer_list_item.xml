@@ -2,30 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
-
+    android:orientation="horizontal" >
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/writerNames"
-        android:layout_width="100dp"
-<<<<<<< Updated upstream
-
         android:layout_height="wrap_content"
-=======
+
+        android:layout_width="100dp"
         android:layout_gravity="center_horizontal"
->>>>>>> Stashed changes
         android:gravity="left"
-        android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+        android:textAppearance="?android:attr/textAppearanceMedium">
+    </TextView>
 
     <ImageView
-        android:id="@+id/profileImageView"
-<<<<<<< Updated upstream
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="right" />
-=======
+        android:id="@+id/profilePicImageView"
         android:layout_width="100px"
         android:layout_height="100px"
         android:layout_marginLeft="250dp"
         android:gravity="right"/>
->>>>>>> Stashed changes
 </LinearLayout>

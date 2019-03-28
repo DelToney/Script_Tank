@@ -55,7 +55,32 @@ exports.grabAllWriters = functions.https.onCall((data, context) => {
         });
     });
 
-exports.sendWriterRequest = functions.https.onCall((data, context) => {
+exports.searchForWriters = functions.https.onCall((data, context) => {
+
+    const query = data.query.toLowerCase();
+    var writers = [];
+    var keys = [];
+    console.log("L:/", "CALLED_SEARCH_FOR_WRITERS", context.auth.uid);
+    const fb = admin.database().ref("/Users/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+                var type = ds.child("type").val();
+                var name = ds.child("name").val();
+                var search_name = name.toLowerCase();
+                if ((type === "Writer") && ((search_name.startsWith(query)) || search_name.includes(query)))  {
+                    writers.push(name)
+                    keys.push(ds.key);
+                }
+        });
+
+        return {names: writers,
+                db_ids: keys};
+        });
+    });
+
+
+
+exports.sendEditorRequest = functions.https.onCall((data, context) => {
 
     const dest_key = data.dest_key;
     console.log("L:/", "CALLED_SEND_REQUEST_TO_WRITER", dest_key);
@@ -91,9 +116,9 @@ exports.sendWriterRequest = functions.https.onCall((data, context) => {
 
 }); */
 
-exports.loadUserProfile = functions.https.onCall((data, context) => {
+exports.loadUserProfileByEmail = functions.https.onCall((data, context) => {
 
-    console.log("L:/", "CALLED_LOAD_USER_PROFILE", context.auth.uid);
+    console.log("L:/", "CALLED_LOAD_USER_PROFILE_EMAIL", context.auth.uid);
     const submit_email = data.email;
     var profile = [];
     var r_key = "";
@@ -111,6 +136,41 @@ exports.loadUserProfile = functions.https.onCall((data, context) => {
             key: r_key};
         });
     });
+
+exports.loadUserProfileByKey = functions.https.onCall((data, context) => {
+
+    console.log("L:/", "CALLED_LOAD_USER_PROFILE_KEY", context.auth.uid);
+    const key = data.key;
+    const fb = admin.database().ref("/Users/" + key);
+    return fb.once('value').then(dataSnapshot => {
+        return dataSnapshot.val();
+        });
+    });
+
+exports.createRequest = functions.https.onCall((data, context) => {
+
+    console.log("L:/", "CALLED_CREATE_REQUEST", context.auth.uid);
+    const user_key = data.user_key;
+    const recv_key = data.receiver_key;
+    const inital_status = "STATUS_PENDING";
+    const request_obj = {uid: user_key, rid: recv_key, status: inital_status};
+    return admin.database().ref("/Requests/").push(request_obj).then((push_request) => {
+
+        const req_key = push_request.key;
+        var recv_deliverable = {};
+        var user_deliverable = {};
+        recv_deliverable[user_key] = req_key;
+        user_deliverable[recv_key] = req_key;
+        const user_update = admin.database().ref("/Users/" + user_key + "/Requests/").update(
+        user_deliverable);
+        const recv_update = admin.database().ref("/Users/" + recv_key + "/Requests/").update(
+        recv_deliverable);
+        return Promise.all([user_update, recv_update]);
+        });
+    });
+
+
+
 
 
 

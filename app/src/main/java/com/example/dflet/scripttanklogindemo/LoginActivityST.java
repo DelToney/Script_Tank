@@ -209,7 +209,7 @@ public class LoginActivityST extends AppCompatActivity {
         FirebaseFunctions ff = FirebaseFunctions.getInstance();
 
         return ff
-                .getHttpsCallable("loadUserProfile")
+                .getHttpsCallable("loadUserProfileByEmail")
                 .call(data)
                 .continueWith(new Continuation<HttpsCallableResult, HashMap<String, Object>>() {
                     @Override

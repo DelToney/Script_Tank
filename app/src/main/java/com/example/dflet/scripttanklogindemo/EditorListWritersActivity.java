@@ -1,14 +1,17 @@
 package com.example.dflet.scripttanklogindemo;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.SearchView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,14 +26,21 @@ import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class EditorListWritersActivity extends AppCompatActivity {
 
     private RecyclerView writerList;
+    private SearchView userSearch;
+    private Button filterButton;
     private static ArrayList<String> writerNames, keys;
     private WriterRequestListAdapter writerRequestListAdapter;
+    private boolean sortDirection, sorting; // false == A to Z , true == Z to A
     private static User m_User;
     protected ScriptTankApplication myApp;
 
@@ -40,8 +50,12 @@ public class EditorListWritersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_editor_list_writers);
         myApp = (ScriptTankApplication)this.getApplicationContext(); //get application context
         m_User = myApp.getM_User(); //get user object for in activity use
-        myApp.setCurrActivity(this); //set this as current activity at application level
+        myApp.setCurrActivity(this);//set this as current activity at application level
+        sortDirection = false;
+        sorting = false;
         writerList = findViewById(R.id.writersList);
+        userSearch = findViewById(R.id.userSearchView);
+        filterButton = findViewById(R.id.filterButton);
         writerList.setHasFixedSize(true);
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         writerList.addItemDecoration(itemDecoration);
@@ -67,16 +81,8 @@ public class EditorListWritersActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
              if (task.isSuccessful()) {
                 HashMap<String, Object> results = task.getResult();
-                ArrayList<String> tempNames, tempKeys;
-                tempKeys = (ArrayList<String>)results.get("db_ids");
-                tempNames = (ArrayList<String>)results.get("names");
-                for (String id : tempKeys) {
-                    keys.add(id);
-                }
-                for (String name : tempNames) {
-                    writerNames.add(name);
-                }
-                updateListAdapter();
+
+                updateListAdapter(results);
             } else {
                 Exception e = task.getException();
                 if (e instanceof FirebaseFunctionsException) {
@@ -93,15 +99,28 @@ public class EditorListWritersActivity extends AppCompatActivity {
         writerRequestListAdapter.setOnItemClickListener(new WriterRequestListAdapter.WriterClickListener() {
             @Override
             public void onItemClicked(int pos) {
-                String dest_key = keys.get(pos);
-                String sender_name = m_User.name;
-                String body = sender_name + " has sent you an Editor request";
-                sendEditorRequest(body, dest_key).addOnCompleteListener(new OnCompleteListener<String>() {
+                Intent intent = new Intent(EditorListWritersActivity.this, ProfileActivity.class);
+                intent.putExtra("key", keys.get(pos));
+                startActivity(intent);
+            }
+        });
+
+        userSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+                searchForWriters(s).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
                     @Override
-                    public void onComplete(@NonNull Task<String> task) {
+                    public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
                         if (task.isSuccessful()) {
-                            System.out.println("The message was successful " + task.getResult());
-                            Toast.makeText(EditorListWritersActivity.this, "Request was successfully sent!", Toast.LENGTH_LONG).show();
+                            HashMap<String, Object> results = task.getResult();
+
+                            updateListAdapter(results);
                         } else {
                             Exception e = task.getException();
                             if (e instanceof FirebaseFunctionsException) {
@@ -109,11 +128,22 @@ public class EditorListWritersActivity extends AppCompatActivity {
                                 FirebaseFunctionsException.Code code = ffe.getCode();
                                 Object details = ffe.getDetails();
                             }
-                            System.err.println(e);
+                            System.err.println(e.getMessage());
                         }
                     }
                 });
-
+                return false;
+            }
+        });
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!(sorting)) {
+                    sorting = true;
+                    sortList();
+                    sortDirection = !sortDirection;
+                    sorting = false;
+                }
             }
         });
 
@@ -121,7 +151,23 @@ public class EditorListWritersActivity extends AppCompatActivity {
 
 
 
-    private void updateListAdapter() {
+
+
+    private void updateListAdapter(HashMap<String, Object> results) {
+
+        ArrayList<String> tempNames, tempKeys;
+        tempKeys = (ArrayList<String>)results.get("db_ids");
+        tempNames = (ArrayList<String>)results.get("names");
+        if (!(keys.isEmpty()))
+            keys.clear();
+        if (!(writerNames.isEmpty()))
+            writerNames.clear();
+        for (String id : tempKeys) {
+            keys.add(id);
+        }
+        for (String name : tempNames) {
+            writerNames.add(name);
+        }
         writerRequestListAdapter.notifyDataSetChanged();
     }
 
@@ -164,5 +210,54 @@ public class EditorListWritersActivity extends AppCompatActivity {
                         return result;
                     }
                 });
+    }
+
+    private Task<HashMap<String, Object>> searchForWriters(String query) {
+        Map<String, Object> data = new HashMap<>();
+        //data.put("push", true); //always include this, please. It is unknown what happens,
+        // if it ain't there.
+        data.put("query", query);
+
+        FirebaseFunctions ff = FirebaseFunctions.getInstance();
+
+        return ff
+                .getHttpsCallable("searchForWriters")
+                .call(data)
+                .continueWith(new Continuation<HttpsCallableResult, HashMap<String, Object>>() {
+                    @Override
+                    public HashMap<String, Object> then(@NonNull Task<HttpsCallableResult> task) throws Exception {
+                        HashMap<String, Object> result = (HashMap<String, Object>) task.getResult().getData();
+                        return result;
+                    }
+                });
+    }
+
+    private void sortList() {
+        HashMap<String, String> keyNamePairs = new  HashMap<>();
+        int userSetSize = writerNames.size();
+        for (int i = 0; i<userSetSize; i++) {
+            keyNamePairs.put( keys.get(i), writerNames.get(i));
+        }
+        List<Map.Entry<String, String> > sortedKeys =
+                new LinkedList<>(keyNamePairs.entrySet());
+        Collections.sort(sortedKeys, new Comparator<Map.Entry<String, String>>() {
+            @Override
+            public int compare(Map.Entry<String, String> stringStringEntry, Map.Entry<String, String> t1) {
+                if (sortDirection)
+                    return -(stringStringEntry.getValue().compareTo(t1.getValue()));
+                return stringStringEntry.getValue().compareTo(t1.getValue());
+            }
+        });
+        ArrayList<String> tempNames, tempKeys;
+        tempNames = new ArrayList<>();
+        tempKeys = new ArrayList<>();
+        for (Map.Entry<String, String> user : sortedKeys) {
+            tempNames.add(user.getValue());
+            tempKeys.add(user.getKey());
+        }
+        HashMap<String, Object> dataSet = new HashMap<>();
+        dataSet.put("db_ids", tempKeys);
+        dataSet.put("names", tempNames);
+        updateListAdapter(dataSet);
     }
 }
