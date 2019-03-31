@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class writer_search extends AppCompatActivity {
     private Toolbar toolbar;
 
@@ -38,6 +41,8 @@ public class writer_search extends AppCompatActivity {
     public String keyword;
     public String writer;
 
+    private String dbName;
+    private DatabaseReference db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,9 @@ public class writer_search extends AppCompatActivity {
         suspenseBox = findViewById(R.id.suspenseBox);
 
         searchButton = findViewById(R.id.searchButton);
+
+        dbName = "https://scripttankdemo.firebaseio.com/";
+        db = FirebaseDatabase.getInstance().getReference();
 
         setSupportActionBar(toolbar); //Creates toolbar at the top of the screen
 
@@ -107,3 +115,9 @@ public class writer_search extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
+// NOTES TO SELF
+// db.addListenerForSingleValueEvent()
+// databaseReference.orderByChild('_searchLastName')
+//                  .startAt(queryText)
+//                  .endAt(queryText+"\uf8ff")
