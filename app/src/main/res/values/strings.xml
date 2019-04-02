@@ -32,6 +32,7 @@
     <string name="contact_writers">Contact Writers</string>
 
     <!-- Strings related to publisher search -->
+    <string name="search_titlebar">Search</string>
     <string name="search_keywords">Enter keywords</string>
     <string name="nothing_found">No books found</string>
     <string name="placeholder">Placeholder</string>
