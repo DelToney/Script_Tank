@@ -1,45 +1,37 @@
 package com.example.dflet.scripttanklogindemo;
 
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class writer_search extends AppCompatActivity {
     private Toolbar toolbar;
 
     private TextView keywordBox;
-    private TextView writerBox;
-
-    private CheckBox fantasyBox;
-    private CheckBox sciFiBox;
-    private CheckBox selfHelpBox;
-    private CheckBox romanceBox;
-    private CheckBox thrillerBox;
-    private CheckBox mysteryBox;
-    private CheckBox actionBox;
-    private CheckBox dramaBox;
-    private CheckBox satireBox;
-    private CheckBox historicalFicBox;
-    private CheckBox youngAdultBox;
-    private CheckBox suspenseBox;
-
-    private FloatingActionButton searchButton;
+    private RecyclerView recyclerView;
 
     private DrawerLayout drawerLayout;
 
     public String keyword;
-    public String writer;
 
     private String dbName;
     private DatabaseReference db;
@@ -52,53 +44,59 @@ public class writer_search extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
 
         keywordBox = findViewById(R.id.keywordsSearchBox);
-        writerBox = findViewById(R.id.writersSearchBox);
-
-        fantasyBox = findViewById(R.id.fantasyBox);
-        sciFiBox = findViewById(R.id.scifiBox);
-        selfHelpBox = findViewById(R.id.selfhelpBox);
-        romanceBox = findViewById(R.id.romanceBox);
-        thrillerBox = findViewById(R.id.thrillerBox);
-        mysteryBox = findViewById(R.id.mysteryBox);
-        actionBox = findViewById(R.id.actionBox);
-        dramaBox = findViewById(R.id.dramaBox);
-        satireBox = findViewById(R.id.satireBox);
-        historicalFicBox = findViewById(R.id.historicalFicBox);
-        youngAdultBox = findViewById(R.id.youngAdultBox);
-        suspenseBox = findViewById(R.id.suspenseBox);
-
-        searchButton = findViewById(R.id.searchButton);
+        keyword = keywordBox.getText().toString();
+        recyclerView = findViewById(R.id.resultsList);
 
         dbName = "https://scripttankdemo.firebaseio.com/";
         db = FirebaseDatabase.getInstance().getReference();
 
         setSupportActionBar(toolbar); //Creates toolbar at the top of the screen
 
-        // Creates button in toolbar to access side menu
+        // Creates button in toolbar to access side menu (when I create it)
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-        // When the floating action button (search button) is pressed, searches for keywords/writers (if textboxes aren't
-        // empty) and genres (when checkboxes are checked)
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                keyword = keywordBox.getText().toString();
-                writer = writerBox.getText().toString();
-                if(keyword.matches("")){
-                    // Dont include in search
+        // Checks to see if text in text box has been changed, then updates the query if it does
+        keywordBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Technically don't need this
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Technically don't need this either
+            }
+            // Below is where the query is updated
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!keyword.isEmpty()) {
+                    search(keyword);
                 }
                 else {
-                    // Search for keyword
+                    search("");
                 }
+            }
+        });
+    }
+    // Search function used in updating search query
+    private void search(String s) {
+        Query query = db.orderByChild("title")
+                .startAt(s)
+                .endAt(s + "\uf8ff");
 
-                if(writer.matches("")){
-                    // Dont include in search
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChildren()){
+                    
                 }
+            }
 
-                else {
-                    // Search for writer
-                }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
@@ -118,6 +116,6 @@ public class writer_search extends AppCompatActivity {
 
 // NOTES TO SELF
 // db.addListenerForSingleValueEvent()
-// databaseReference.orderByChild('_searchLastName')
-//                  .startAt(queryText)
-//                  .endAt(queryText+"\uf8ff")
+//          db.orderByChild("title")
+//                  .startAt(keyword)
+//                  .endAt(keyword+"\uf8ff");
