@@ -61,9 +61,11 @@ public class writer_search extends AppCompatActivity {
         // Array List to display results
         arrayList = new ArrayList<>();
 
+        // Builds the RecyclerView
         options = new FirebaseRecyclerOptions.Builder<WriterSearchResult>()
         .setQuery(db, WriterSearchResult.class).build();
 
+        // Set text and layout for each entry in the RecyclerView
         adapter = new FirebaseRecyclerAdapter<WriterSearchResult, SearchResultContainer>(options) {
             @Override
             protected void onBindViewHolder(@NonNull SearchResultContainer holder, int position, @NonNull WriterSearchResult model) {
@@ -80,11 +82,19 @@ public class writer_search extends AppCompatActivity {
                 return new SearchResultContainer(view);
             }
         };
-
+        // Grid layout for RecyclerView
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),1);
+
+        // Set RecyclerView to a fixed size
         recyclerView.setHasFixedSize(true);
+
+        // Set RecyclerView to grid layout
         recyclerView.setLayoutManager(gridLayoutManager);
+
+        // Set the RecyclerView to listen
         adapter.startListening();
+
+        // Sets the RecyclerView adapter
         recyclerView.setAdapter(adapter);
 
         // Database URL (will remove if not needed) and Database reference
@@ -129,6 +139,7 @@ public class writer_search extends AppCompatActivity {
         // Ends at the same keyword plus a special character.
         // Ends same as started because it wants to search for only entries that include the search keyword.
 
+        // Creates ArrayList used for listing the entries in the RecyclerView
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -162,20 +173,22 @@ public class writer_search extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    // onStart is called when app starts
     @Override
     protected void onStart(){
         super.onStart();
         if(adapter != null)
             adapter.startListening();
     }
-
+    // onStop is called when the app is paused/stopped
     @Override
     protected void onStop() {
         super.onStop();
         if(adapter != null)
             adapter.stopListening();
     }
-
+    // onResume is called when the app is resumed from a paused state (not completely closed)
     @Override
     protected void onResume() {
         super.onResume();
