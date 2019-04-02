@@ -150,7 +150,9 @@ public class writer_search extends AppCompatActivity {
                         arrayList.add(result);
                     }
 
-
+                    SearchResultAdapter searchResultAdapter = new SearchResultAdapter(getApplicationContext(), arrayList);
+                    recyclerView.setAdapter(searchResultAdapter);
+                    searchResultAdapter.notifyDataSetChanged();
                 }
             }
 
