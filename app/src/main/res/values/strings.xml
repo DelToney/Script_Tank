@@ -33,21 +33,6 @@
 
     <!-- Strings related to publisher search -->
     <string name="search_keywords">Enter keywords</string>
-    <string name="search_writers">Enter writer\'s name</string>
-    <string name="search_categories">Search by Category</string>
-    <string name="search_fantasy">Fantasy</string>
-    <string name="search_scifi">Sci-Fi</string>
-    <string name="search_self_help">Self Help</string>
-    <string name="search_romance">Romance</string>
-    <string name="search_thriller">Thriller</string>
-    <string name="search_mystery">Mystery</string>
-    <string name="search_action">Action/Adventure</string>
-    <string name="search_drama">Drama</string>
-    <string name="search_satire">Satire</string>
-    <string name="search_titlebar">Search</string>
-    <string name="search_suspense">Suspense</string>
-    <string name="search_historical_fic">Historical Fiction</string>
-    <string name="search_young_adult">Young Adult</string>
-    <string name="search_keywords_title">Search by Keyword</string>
-    <string name="search_writers_title">Search by Writer</string>
+    <string name="nothing_found">No books found</string>
+    <string name="placeholder">Placeholder</string>
 </resources>

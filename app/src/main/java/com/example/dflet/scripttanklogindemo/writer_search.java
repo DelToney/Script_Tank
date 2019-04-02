@@ -1,7 +1,6 @@
 package com.example.dflet.scripttanklogindemo;
 
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -12,8 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,15 +21,12 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class writer_search extends AppCompatActivity {
+    // Initialization of variables
     private Toolbar toolbar;
-
     private TextView keywordBox;
     private RecyclerView recyclerView;
-
     private DrawerLayout drawerLayout;
-
     public String keyword;
-
     private String dbName;
     private DatabaseReference db;
 
@@ -41,12 +35,19 @@ public class writer_search extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_writer_search);
 
+        // Toolbar at top of screen
         toolbar = findViewById(R.id.toolbar);
 
+        // Keyword text box
         keywordBox = findViewById(R.id.keywordsSearchBox);
+
+        // Keyword text
         keyword = keywordBox.getText().toString();
+
+        // List of results
         recyclerView = findViewById(R.id.resultsList);
 
+        // Database URL (will remove if not needed) and Database reference
         dbName = "https://scripttankdemo.firebaseio.com/";
         db = FirebaseDatabase.getInstance().getReference();
 
@@ -61,7 +62,7 @@ public class writer_search extends AppCompatActivity {
         keywordBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Technically don't need this
+                // Technically don't need this. Was automatically added by android studio.
             }
 
             @Override
@@ -83,8 +84,10 @@ public class writer_search extends AppCompatActivity {
     // Search function used in updating search query
     private void search(String s) {
         Query query = db.orderByChild("title")
-                .startAt(s)
+                .startAt(s) // Starts at the keyword searched for
                 .endAt(s + "\uf8ff");
+        // Ends at the same keyword plus a special character.
+        // Ends same as started because it wants to search for only entries that include the search keyword.
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -115,7 +118,6 @@ public class writer_search extends AppCompatActivity {
 }
 
 // NOTES TO SELF
-// db.addListenerForSingleValueEvent()
 //          db.orderByChild("title")
 //                  .startAt(keyword)
 //                  .endAt(keyword+"\uf8ff");
