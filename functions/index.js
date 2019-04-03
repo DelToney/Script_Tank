@@ -171,6 +171,23 @@ exports.createRequest = functions.https.onCall((data, context) => {
 
 
 
+exports.getUserIdeas = functions.https.onCall((data, context) => {
+    let ideas = [];
+    let ideaID = [];
+    const userID = data.userID;
+    const dbref = admin.database.ref("/Ideas/" + userID)
+    console.log("getting ", context.auth.uid, "'s files");
+    
 
+    return dbref.once('value').then(datasnapshot => {
+        datasnapshot.forEach(ds => {
+            ideas.push(ds.child('IdeaName'));
+            ideaID.push(ds.key);
+        });
+        return {IdeaIDs: ideaID,
+                IdeaNames: ideas}
+    })
+
+})
 
 

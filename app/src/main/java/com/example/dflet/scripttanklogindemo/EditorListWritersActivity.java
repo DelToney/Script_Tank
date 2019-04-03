@@ -54,7 +54,7 @@ public class EditorListWritersActivity extends AppCompatActivity {
         sortDirection = false;
         sorting = false;
         writerList = findViewById(R.id.writersList);
-        userSearch = findViewById(R.id.userSearchView);
+//        userSearch = findViewById(R.id.userSearchView);
         filterButton = findViewById(R.id.filterButton);
         writerList.setHasFixedSize(true);
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);

@@ -12,6 +12,22 @@ import java.util.ArrayList;
 
 public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewAdapterViewHolder> {
     private ArrayList<TestItem> mItemList;
+    public onItemClickListener mListener;
+
+    public interface onItemClickListener {
+        void OnItemClick(int position);
+
+    }
+
+    public void setOnItemClickListener(onItemClickListener listener) {
+
+    }
+
+
+
+
+
+
     //view holder: gets values and assigns them for us
     public static class ViewAdapterViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
