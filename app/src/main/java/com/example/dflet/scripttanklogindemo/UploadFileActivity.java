@@ -35,12 +35,15 @@ public class UploadFileActivity extends AppCompatActivity {
     private Uri userFileUri = null;
     private EditText fileTitle;
     private static User m_User;
+    protected ScriptTankApplication myApp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_file);
-        Intent recvIntent = getIntent();
-        m_User = (User)recvIntent.getSerializableExtra(getString(R.string.user_profile_intent));
+        myApp = (ScriptTankApplication)this.getApplicationContext();
+        m_User = myApp.getM_User();
+        myApp.setCurrActivity(this);
         fileTitle = findViewById(R.id.fileNameEditText);
         final Button chooseFileButton = findViewById(R.id.chooseFileButton);
         final Button uploadFileButton = findViewById(R.id.uploadFileButton);
@@ -108,7 +111,6 @@ public class UploadFileActivity extends AppCompatActivity {
                 return;
 
             FirebaseStorage fs = FirebaseStorage.getInstance("gs://scripttankdemo.appspot.com");
-
             String serverPath = "Files/" + m_User.key + "/" + name;
             StorageReference fRef = fs.getReference().child(serverPath);
             UploadTask ut = fRef.putFile(userFileUri);

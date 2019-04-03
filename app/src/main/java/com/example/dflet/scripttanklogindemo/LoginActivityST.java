@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableResult;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +41,8 @@ public class LoginActivityST extends AppCompatActivity {
     //Firebase Authentication object so that we can interface w/ server.
     private FirebaseAuth mFBAuth;
     private String email;
+    private boolean loginAttempt;  //chekc if user is already attempting to login
+    protected ScriptTankApplication myApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,8 @@ public class LoginActivityST extends AppCompatActivity {
         pwdEditText = findViewById(R.id.pwdEditText);
         emailEditText = findViewById(R.id.emailEditText);
         errorDisplay = findViewById(R.id.errorDisplay);
+
+        loginAttempt = false;
 
         final Button loginButton = findViewById(R.id.loginButton);
 
@@ -70,8 +75,10 @@ public class LoginActivityST extends AppCompatActivity {
     }
 
     private void attemptLogin() {
-        mFBAuth.signOut(); //sign out current user
+        if ((loginAttempt))
+            return;
 
+        loginAttempt = true;
         //reset error values on EditTexts
         errorDisplay.setVisibility(View.INVISIBLE);
         pwdEditText.setError(null);
@@ -89,6 +96,7 @@ public class LoginActivityST extends AppCompatActivity {
                 emailEditText.requestFocus();
             }
             pwdEditText.setError(getString(R.string.error_field_required));
+            loginAttempt = false;
             return;
         }
         //if everything is all set, call login method
@@ -97,6 +105,7 @@ public class LoginActivityST extends AppCompatActivity {
 
     private void handleResponse(String code) {
         //checks which code was passed from the login task. codes are self-explanatory
+        loginAttempt = false;
         switch (code) {
             case "ERROR_USER_NOT_FOUND":
                 emailEditText.setError(getString(R.string.user_not_found));
@@ -122,14 +131,20 @@ public class LoginActivityST extends AppCompatActivity {
                             ArrayList<HashMap<String, Object>> res_set = (ArrayList<HashMap<String, Object>>)task.getResult().get("data");
                             HashMap<String, Object> result = (HashMap<String, Object>)res_set.get(0);
                             String key = (String)task.getResult().get("key");
-                            User userProfile = new User(email, (String)result.get("phoneNumber"),
-                                    (String)result.get("name"), (String)result.get("type"), key);
+                            String token = (String)task.getResult().get("token");
+                            String fb_id = (String)task.getResult().get(("fb_id"));
+                            User userProfile = createProfile(email, (String)result.get("phoneNumber"),
+                                    (String)result.get("name"), (String)result.get("type"), fb_id, token);
+                            userProfile.setKey(key);
+                            myApp = (ScriptTankApplication)LoginActivityST.this.getApplicationContext();
+                            myApp.setM_User(userProfile);
                             Intent intent = new Intent(LoginActivityST.this, DatabaseWriteService.class);
-                            intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
-                            intent.putExtra("DO_NOT_WRITE_TO_DB", true);
+                            //intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
+                            intent.putExtra("PROCESS", "ACCOUNT_LOGIN");
                             startService(intent);
                             intent = new Intent(LoginActivityST.this, HomeActivity.class);
-                            intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
+                           // intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
                             startActivity(intent);
                             finish();
                         } else {
@@ -139,7 +154,6 @@ public class LoginActivityST extends AppCompatActivity {
                                 FirebaseFunctionsException.Code code = ffe.getCode();
                                 Object details = ffe.getDetails();
                             }
-                            System.err.println(e);
                         }
                     }
                 });
@@ -151,9 +165,6 @@ public class LoginActivityST extends AppCompatActivity {
     }
 
     private void loginBackground(String email, String pwd) {
-        if (mFBAuth.getCurrentUser() != null) { //check for current user
-            return;
-        }
 
         //sign in with firebase email and pwd. This method is async, meaning it will operate in the
         //background once it is called. the OnCompleteListener will then wait for the task to finish
@@ -162,7 +173,6 @@ public class LoginActivityST extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    System.out.println("Success"); //the login was successful
                     handleResponse("SUCCESS");
 
                 } else {
@@ -175,6 +185,20 @@ public class LoginActivityST extends AppCompatActivity {
 
     }
 
+    private User createProfile(String email, String phone, String name, String type, String id, String token) {
+        switch (type) {
+            case "Editor":
+                String [] da = new String[4];
+                da[3] = "YES!";
+                Editor newProfile = new Editor(email, phone, name, type, id, da);
+                newProfile.setToken(token);
+                return newProfile;
+            default:
+                String [] data = {"NOT", "A", "Editor", "DUDE"};
+                return new Editor(email, phone, name, type, id, data);
+        }
+    }
+
     private Task<HashMap<String, Object>> getUserProfile() {
         Map<String, Object> data = new HashMap<>();
         data.put("push", true);
@@ -185,13 +209,12 @@ public class LoginActivityST extends AppCompatActivity {
         FirebaseFunctions ff = FirebaseFunctions.getInstance();
 
         return ff
-                .getHttpsCallable("loadUserProfile")
+                .getHttpsCallable("loadUserProfileByEmail")
                 .call(data)
                 .continueWith(new Continuation<HttpsCallableResult, HashMap<String, Object>>() {
                     @Override
                     public HashMap<String, Object> then(@NonNull Task<HttpsCallableResult> task) throws Exception {
                         HashMap<String, Object> result = (HashMap<String, Object>) task.getResult().getData();
-                        System.out.println(result);
                         return result;
                     }
                 });

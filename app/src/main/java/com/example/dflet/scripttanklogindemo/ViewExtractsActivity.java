@@ -36,12 +36,16 @@ public class ViewExtractsActivity extends AppCompatActivity {
     private HashMap<String, Map.Entry<String, String>> user_db_keys;
     private PublisherFileListAdapter adapter;
     private ListView list;
+    private static User m_User;
+    protected ScriptTankApplication myApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_extracts);
-
+        myApp = (ScriptTankApplication)this.getApplicationContext();
+        m_User = myApp.getM_User();
+        myApp.setCurrActivity(this);
         list = findViewById(R.id.fileList);
         user_db_keys = new HashMap<String, Map.Entry<String, String>>();
         usernames = new ArrayList<>();

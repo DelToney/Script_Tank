@@ -8,5 +8,8 @@
 /build
 /captures
 .externalNativeBuild
+.idea/cahces
+.idea/assetWizardSettings.xml
 
-\.idea/render\.experimental\.xml
+
+.idea/render/.experimental\.xml

@@ -1,5 +1,7 @@
 package com.example.dflet.scripttanklogindemo;
 
+import android.view.View;
+
 public class TestItem {
     private int mImageResource;
     private String mText1;
