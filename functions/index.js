@@ -115,3 +115,68 @@ exports.loadUserProfile = functions.https.onCall((data, context) => {
 
 
 
+
+    console.log("L:/", "CALLED_CREATE_REQUEST", context.auth.uid);
+    const user_key = data.user_key;
+    const recv_key = data.receiver_key;
+    const inital_status = "STATUS_PENDING";
+    const request_obj = {uid: user_key, rid: recv_key, status: inital_status};
+    return admin.database().ref("/Requests/").push(request_obj).then((push_request) => {
+
+        const req_key = push_request.key;
+        var recv_deliverable = {};
+        var user_deliverable = {};
+        recv_deliverable[user_key] = req_key;
+        user_deliverable[recv_key] = req_key;
+        const user_update = admin.database().ref("/Users/" + user_key + "/Requests/").update(
+        user_deliverable);
+        const recv_update = admin.database().ref("/Users/" + recv_key + "/Requests/").update(
+        recv_deliverable);
+        return Promise.all([user_update, recv_update]);
+        });
+    });
+
+exports.searchForIdeas = functions.https.onCall((data, context) => {
+
+    const query = data.query.toLowerCase();
+    var ideas = [];
+    var writers = [];
+    console.log("L:/", "CALLED_SEARCH_FOR_IDEAS", context.auth.uid);
+    const fb = admin.database().ref("/Ideas/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+                var idea = ds.child("IdeaName").val();
+                var writer = ds.child("WriterName").val();
+                var search_name = idea.toLowerCase();
+                if (search_name.includes(query)))  {
+                    ideas.push(idea);
+                    writers.push(writer);
+                }
+        });
+
+        return {Ideas: ideas,
+                Writers: writers};
+        });
+    });
+
+
+exports.getUserIdeas = functions.https.onCall((data, context) => {
+    let ideas = [];
+    let ideaID = [];
+    const userID = data.userID;
+    const dbref = admin.database().ref("/Ideas/" + userID);
+    console.log("getting ", context.auth.uid, "'s files");
+    
+
+    return dbref.once('value').then(datasnapshot => {
+        datasnapshot.forEach(ds => {
+            ideas.push(ds.child('IdeaName').val());
+            ideaID.push(ds.key);
+        });
+        return {IdeaIDs: ideaID,
+                IdeaNames: ideas};
+    });
+
+});
+
+
