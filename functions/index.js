@@ -55,15 +55,39 @@ exports.grabAllWriters = functions.https.onCall((data, context) => {
         });
     });
 
-exports.sendWriterRequest = functions.https.onCall((data, context) => {
+exports.searchForWriters = functions.https.onCall((data, context) => {
+
+    const query = data.query.toLowerCase();
+    var writers = [];
+    var keys = [];
+    console.log("L:/", "CALLED_SEARCH_FOR_WRITERS", context.auth.uid);
+    const fb = admin.database().ref("/Users/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+                var type = ds.child("type").val();
+                var name = ds.child("name").val();
+                var search_name = name.toLowerCase();
+                if ((type === "Writer") && ((search_name.startsWith(query)) || search_name.includes(query)))  {
+                    writers.push(name)
+                    keys.push(ds.key);
+                }
+        });
+
+        return {names: writers,
+                db_ids: keys};
+        });
+    });
+
+
+
+exports.sendEditorRequest = functions.https.onCall((data, context) => {
 
     const dest_key = data.dest_key;
     console.log("L:/", "CALLED_SEND_REQUEST_TO_WRITER", dest_key);
-    const path = "/Users/" + dest_key + "/fb_id"
+    const path = "/Users/" + dest_key + "/token"
     const receiver = admin.database().ref(path).once('value');
     return Promise.all([receiver]).then(result_data => {
         const dest_id = result_data[0].val();
-        const token = data.token;
         console.log("L:/", "THE DEST_ID IS", dest_id);
         const payload = {
                 notification: {
@@ -72,7 +96,7 @@ exports.sendWriterRequest = functions.https.onCall((data, context) => {
                 }
         };
 
-        return admin.messaging().sendToDevice(token, payload)
+        return admin.messaging().sendToDevice(dest_id, payload)
         .then(function (response) {
             console.log("Successfully sent a message", response);
             return response;
@@ -92,9 +116,9 @@ exports.sendWriterRequest = functions.https.onCall((data, context) => {
 
 }); */
 
-exports.loadUserProfile = functions.https.onCall((data, context) => {
+exports.loadUserProfileByEmail = functions.https.onCall((data, context) => {
 
-    console.log("L:/", "CALLED_LOAD_USER_PROFILE", context.auth.uid);
+    console.log("L:/", "CALLED_LOAD_USER_PROFILE_EMAIL", context.auth.uid);
     const submit_email = data.email;
     var profile = [];
     var r_key = "";
@@ -113,8 +137,17 @@ exports.loadUserProfile = functions.https.onCall((data, context) => {
         });
     });
 
+exports.loadUserProfileByKey = functions.https.onCall((data, context) => {
 
+    console.log("L:/", "CALLED_LOAD_USER_PROFILE_KEY", context.auth.uid);
+    const key = data.key;
+    const fb = admin.database().ref("/Users/" + key);
+    return fb.once('value').then(dataSnapshot => {
+        return dataSnapshot.val();
+        });
+    });
 
+exports.createRequest = functions.https.onCall((data, context) => {
 
     console.log("L:/", "CALLED_CREATE_REQUEST", context.auth.uid);
     const user_key = data.user_key;
@@ -136,28 +169,6 @@ exports.loadUserProfile = functions.https.onCall((data, context) => {
         });
     });
 
-exports.searchForIdeas = functions.https.onCall((data, context) => {
-
-    const query = data.query.toLowerCase();
-    var ideas = [];
-    var writers = [];
-    console.log("L:/", "CALLED_SEARCH_FOR_IDEAS", context.auth.uid);
-    const fb = admin.database().ref("/Ideas/");
-    return fb.once('value').then(dataSnapshot => {
-        dataSnapshot.forEach(ds => {
-                var idea = ds.child("IdeaName").val();
-                var writer = ds.child("WriterName").val();
-                var search_name = idea.toLowerCase();
-                if (search_name.includes(query)))  {
-                    ideas.push(idea);
-                    writers.push(writer);
-                }
-        });
-
-        return {Ideas: ideas,
-                Writers: writers};
-        });
-    });
 
 
 exports.getUserIdeas = functions.https.onCall((data, context) => {
@@ -179,4 +190,25 @@ exports.getUserIdeas = functions.https.onCall((data, context) => {
 
 });
 
+exports.searchForIdeas = functions.https.onCall((data, context) => {
 
+    const query = data.query.toLowerCase();
+    var ideas = [];
+    var writers = [];
+    console.log("L:/", "CALLED_SEARCH_FOR_IDEAS", context.auth.uid);
+    const fb = admin.database().ref("/Ideas/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+                var idea = ds.child("IdeaName").val();
+                var writer = ds.child("WriterName").val();
+                var search_name = idea.toLowerCase();
+                if (search_name.includes(query))  {
+                    ideas.push(idea);
+                    writers.push(writer);
+                }
+        });
+
+        return {Ideas: ideas,
+                Writers: writers};
+        });
+    });

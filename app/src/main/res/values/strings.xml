@@ -36,4 +36,6 @@
     <string name="search_keywords">Enter keywords</string>
     <string name="nothing_found">No books found</string>
     <string name="placeholder">Placeholder</string>
+    <string name="search">Search</string>
+    <string name="demo">SearchUI Demo</string>
 </resources>

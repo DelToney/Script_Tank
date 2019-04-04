@@ -1,30 +1,25 @@
 package com.example.dflet.scripttanklogindemo;
 
 public class WriterSearchResult {
-    public String title, writer;
+    private int mImageResource;
+    private String mText1;
+    private String mText2;
 
-    public WriterSearchResult(String title, String writer){
-        this.title = title;
-        this.writer = writer;
+    public WriterSearchResult(int imageResource, String text1, String text2) {
+        mImageResource = imageResource;
+        mText1 = "Placeholder";
+        mText2 = "Placeholder";
     }
 
-    public WriterSearchResult() {
+    public int getImageResource() {
+        return mImageResource;
     }
 
-    public String getTitle() {
-        return title;
+    public String getText1() {
+        return mText1;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public String getText2() {
+        return mText2;
     }
-
-    public String getWriter() {
-        return writer;
-    }
-
-    public void setWriter(String writer) {
-        this.writer = writer;
-    }
-
 }

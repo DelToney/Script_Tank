@@ -21,6 +21,7 @@ public class HomeActivity extends AppCompatActivity {
     private DrawerLayout m_Layout;
     private NavigationView m_NavigationView;
     private static User m_User;
+    private Button searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class HomeActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
         m_Layout = findViewById(R.id.drawer_layout);
         m_NavigationView = findViewById(R.id.nav_view);
+        searchButton = findViewById(R.id.searchUIButton);
         setNavMenu();
         m_NavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -79,6 +81,14 @@ public class HomeActivity extends AppCompatActivity {
                 logOut();
             }
         });
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this, writer_search.class));
+            }
+        });
+
     }
 
     private void logOut() {
