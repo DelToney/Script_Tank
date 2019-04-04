@@ -32,4 +32,5 @@
     <string name="contact_writers">Contact Writers</string>
     <string name="send_request">Send Request</string>
     <string name="view_files">View Files</string>
+    <string name="send_message">Send Message</string>
 </resources>

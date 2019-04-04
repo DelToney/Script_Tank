@@ -37,4 +37,8 @@ public abstract class User implements Serializable {
         this.token = token;
     }
 
+    public String getKey() { return this.key;}
+
+    public String getToken() { return this.token;}
+
 }

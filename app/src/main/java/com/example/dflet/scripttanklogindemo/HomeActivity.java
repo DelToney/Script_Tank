@@ -73,6 +73,14 @@ public class HomeActivity extends AppCompatActivity {
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
+                    case R.id.sendMessageDrawer:
+                        menuItem.setChecked(true);
+                        m_Layout.closeDrawers();
+                        intent = new Intent(HomeActivity.this,
+                                ChatListActivity.class);
+                        menuItem.setChecked(false);
+                        startActivity(intent);
+                        return true;
                     default:
                         return true;
                 }
@@ -89,7 +97,7 @@ public class HomeActivity extends AppCompatActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editorBoy.setText(m_Editor.getAssociations());
+                editorBoy.setText(m_User.getToken());
             }
         });
     }
@@ -104,6 +112,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setNavMenu() {
         if (m_User == null) {
+            editorBoy.setText("Relaunch App");
             m_NavigationView.inflateMenu(R.xml.drawer_view_writer);
             return;
         }

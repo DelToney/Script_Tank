@@ -88,7 +88,6 @@ exports.sendEditorRequest = functions.https.onCall((data, context) => {
     const receiver = admin.database().ref(path).once('value');
     return Promise.all([receiver]).then(result_data => {
         const dest_id = result_data[0].val();
-        console.log("L:/", "THE DEST_ID IS", dest_id);
         const payload = {
                 notification: {
                     title: "New Editor Request",
@@ -106,6 +105,48 @@ exports.sendEditorRequest = functions.https.onCall((data, context) => {
     });
 
 });
+
+
+exports.sendMessageFCM = functions.https.onCall((data, context) => {
+
+    const msg_content = data.content;
+    const rid = data.recv_id;
+    const sid = data.sender_id;
+    console.log("L:/", "CALLED_SEND_MESSAGE", rid);
+    const msg_path = "/Messages/sampleThread/";
+    const recv_path = "/Users/" + rid + "/token"
+    const db_data = {
+        content: msg_content,
+        recv_id: rid,
+        sender_id: sid,
+    };
+    const message = {
+                        data: {
+                            content: msg_content,
+                        }
+     };
+
+    const get_key = admin.database().ref(recv_path).once('value');
+    const write_db_data = admin.database().ref(msg_path).push(db_data);
+
+    return Promise.all([write_db_data, get_key]).then(result_data => {
+        const dest_token = result_data[1].val();
+        console.log(dest_token, dest_token);
+        return  admin.messaging().sendToDevice(dest_token, message)
+                                       .then(function (response) {
+                                           console.log("Successfully sent a message", response);
+                                           return response;
+                                       }).catch(function (error) {
+                                           console.log("Error sending message", error);
+                                       });
+        //return ;
+
+        });
+
+});
+
+
+
 
 /*exports.changePushId = functions.database.ref('/Users/{pushId}/').onCreate((snapshot, context) => {
     console.log("L:/", "CHANGE_PUSH_ID_CALLED");
@@ -169,25 +210,66 @@ exports.createRequest = functions.https.onCall((data, context) => {
         });
     });
 
+exports.grabUserFriends = functions.https.onCall((data, context) => {
+
+    const user_id = data.user_id;
+    var names = [];
+    var thread_ids = [];
+    var keys = [];
+    console.log("L:/", "CALLED_GRAB_USER_FRIENDS", context.auth.uid);
+    const fb = admin.database().ref("/Users/" + user_id + "/Messages/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+              var friend_id = ds.key;
+              var thread_id = ds.val();
+              var friend_name = "";
+              var id = "";
+              admin.database().ref("/Users/" + friend_id).on('value', function(value) {
+                id = value.key;
+                friend_name = value.child("name").val();
+                keys.push(id)
+                names.push(friend_name);
+                thread_ids.push(thread_id)
+
+              }, function(errorObject) {
+                console.log("Failure: " + errorObject.code);
+              });
 
 
-exports.getUserIdeas = functions.https.onCall((data, context) => {
-    let ideas = [];
-    let ideaID = [];
-    const userID = data.userID;
-    const dbref = admin.database.ref("/Ideas/" + userID)
-    console.log("getting ", context.auth.uid, "'s files");
-    
 
-    return dbref.once('value').then(datasnapshot => {
-        datasnapshot.forEach(ds => {
-            ideas.push(ds.child('IdeaName'));
-            ideaID.push(ds.key);
         });
-        return {IdeaIDs: ideaID,
-                IdeaNames: ideas}
-    })
+            return {friends: names,
+                                     threads: thread_ids,
+                                     keys: keys};
+        });
 
-})
+
+
+
+    });
+
+exports.retrieveMessages = functions.https.onCall((data, context) => {
+
+    const thread_id = data.thread_id;
+    var messages = [];
+    console.log("L:/", "CALLED_RETRIEVE_MESSAGES", context.auth.uid);
+    const fb = admin.database().ref("/Messages/" + thread_id);
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+              var content = ds.child("content").val();
+              var sender_id = ds.child("sender_id").val();
+              messages.push({content: content, id: sender_id});
+
+        });
+            return {messages: messages};
+        });
+
+
+
+
+    });
+
+
+
 
 

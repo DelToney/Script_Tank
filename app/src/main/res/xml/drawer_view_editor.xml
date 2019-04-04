@@ -4,5 +4,8 @@
         <item
             android:id="@+id/contactWriters"
             android:title="@string/contact_writers" />
+        <item
+            android:id="@+id/sendMessageDrawer"
+            android:title="@string/send_message" />
     </group>
 </menu>
