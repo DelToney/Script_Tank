@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -53,56 +54,73 @@ public class writer_search extends AppCompatActivity {
         recyclerView = findViewById(R.id.resultsList);
         // Firebase initialization
         functions = FirebaseFunctions.getInstance();
-        // RecyclerView Adapter
-        adapter = new SearchResultAdapter(writerSearchResults);
         // Array of results
         writerSearchResults = new ArrayList<>();
         // Search button
         button = findViewById(R.id.button);
 
-        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
         setSupportActionBar(toolbar); //Creates toolbar at the top of the screen
 
-        searchForIdeas(keyword).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>(){
-            @Override
-            public void onComplete(@NonNull Task<HashMap<String, Object>> task){
-                if(task.isSuccessful()){
-                    System.out.println("Success");
-                    updateListAdapter(task.getResult());
-                }
-                else {
-                    Exception e = task.getException();
-                    if (e instanceof FirebaseFunctionsException) {
-                        FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
-                        FirebaseFunctionsException.Code code = ffe.getCode();
-                        Object details = ffe.getDetails();
-                    }
-                    System.err.println(e.getMessage());
-                }
-            }
-        });
-
         // Creates button in toolbar to access side menu (when I create it)
-        final ActionBar actionBar = getSupportActionBar();
+/*        final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);*/
 
+        // RecyclerView Adapter
+        adapter = new SearchResultAdapter(writerSearchResults);
+        recyclerView.setAdapter(adapter);
+
+        // Checks when button is pressed
         button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                searchForIdeas(keyword);
-                adapter.notifyDataSetChanged();
+                // Clear current search results
+                writerSearchResults.clear();
+
+                // Update RecyclerView with results
+                searchForIdeas(keywordBox.getText().toString()).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>(){
+                    @Override
+                    public void onComplete(@NonNull Task<HashMap<String, Object>> task){
+                        // If the firebase function executes successfully
+                        if(task.isSuccessful()){
+                            // Log 'success' in the Logcat
+                            Log.d("Success", "Success");
+                            // Set results to the result of the firebase function
+                            HashMap<String, Object> results = task.getResult();
+                            // Update RecyclerView with results
+                            updateListAdapter(results);
+                            // Debug stuff
+                            System.out.println(results.size());
+                            System.out.println(results);
+                        }
+                        else {
+                            // If the firebase fails
+                            Exception e = task.getException();
+                            if (e instanceof FirebaseFunctionsException) {
+                                // Logs error in the firebase console
+                                FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                                FirebaseFunctionsException.Code code = ffe.getCode();
+                                Object details = ffe.getDetails();
+                            }
+                            // Prints error message in Logcat
+                            System.err.println(e.getMessage());
+                        }
+                    }
+                });
             }
         });
+
 
     }
     // Search function used in updating search query
     private Task<HashMap<String, Object>> searchForIdeas(String query){
+        // Data put into function
         Map<String, Object> data = new HashMap<>();
         data.put("query", query);
 
+        // Call firebase function
         return functions.getHttpsCallable("searchForIdeas")
                 .call(data)
                 .continueWith(new Continuation<HttpsCallableResult, HashMap<String, Object>>() {
@@ -114,14 +132,19 @@ public class writer_search extends AppCompatActivity {
                 });
     }
 
+    // Updates adapter with data from search result
     private void updateListAdapter(HashMap<String, Object> results){
-
+        // Arrays for different text in the RecyclerView entry
         ideaTitles = (ArrayList<String>)results.get("Ideas");
         writers = (ArrayList<String>)results.get("Writers");
+
+        // For each entry in ideaTitles
         for(int i = 0; i < ideaTitles.size(); i++) {
+            // Add new search result
             writerSearchResults.add(new WriterSearchResult(R.drawable.ic_person_black_24dp, ideaTitles.get(i), writers.get(i)));
         }
 
+        // Notify the adapter that the data has changed, changing the RecyclerView entries
         adapter.notifyDataSetChanged();
     }
 

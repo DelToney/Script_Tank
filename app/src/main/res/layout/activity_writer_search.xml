@@ -39,8 +39,8 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/resultsList"
-        android:layout_width="395dp"
-        android:layout_height="537dp"
+        android:layout_width="318dp"
+        android:layout_height="465dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -49,9 +49,10 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.924" />
+        app:layout_constraintVertical_bias="0.797" />
 
     <Button
         android:id="@+id/button"

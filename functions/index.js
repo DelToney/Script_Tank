@@ -192,23 +192,26 @@ exports.getUserIdeas = functions.https.onCall((data, context) => {
 
 exports.searchForIdeas = functions.https.onCall((data, context) => {
 
-    const query = data.query.toLowerCase();
+    const query = data.query;
     var ideas = [];
     var writers = [];
-    console.log("L:/", "CALLED_SEARCH_FOR_IDEAS", context.auth.uid);
+    console.log("L:/", "CALLED_SEARCH_FOR_IDEAS", query);
     const fb = admin.database().ref("/Ideas/");
     return fb.once('value').then(dataSnapshot => {
         dataSnapshot.forEach(ds => {
-                var idea = ds.child("IdeaName").val();
-                var writer = ds.child("WriterName").val();
-                var search_name = idea.toLowerCase();
-                if (search_name.includes(query))  {
+            ds.forEach(ds1 =>{
+                var idea = ds1.child("IdeaName").val()
+                var writer = ds1.child("WriterName").val();
+                if (idea.includes(query))  {
                     ideas.push(idea);
                     writers.push(writer);
                 }
         });
 
-        return {Ideas: ideas,
-                Writers: writers};
+
+
         });
+                return {Ideas: ideas,
+                        Writers: writers};
+      });
     });

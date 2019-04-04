@@ -70,6 +70,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     @Override
     public int getItemCount() {
-        return  mItemList == null ? 0 : mItemList.size();
+        return mItemList.size();
     }
 }

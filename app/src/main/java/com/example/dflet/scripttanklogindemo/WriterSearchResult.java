@@ -7,8 +7,8 @@ public class WriterSearchResult {
 
     public WriterSearchResult(int imageResource, String text1, String text2) {
         mImageResource = imageResource;
-        mText1 = "Placeholder";
-        mText2 = "Placeholder";
+        mText1 = text1;
+        mText2 = text2;
     }
 
     public int getImageResource() {
