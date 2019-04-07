@@ -17,7 +17,7 @@
             android:background="?attr/colorControlActivated"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:title="@string/uploads_toolbar" />
+            app:title="@string/app_name" />
 
 
         <android.support.v7.widget.RecyclerView

@@ -2,6 +2,7 @@ package com.example.dflet.scripttanklogindemo;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.icu.text.SymbolTable;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -65,7 +67,7 @@ public class ViewUploadsActivity extends AppCompatActivity {
 //        ab.setDisplayHomeAsUpEnabled(true);
 //        ab.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
 
-        m_User = (User)recvIntent.getSerializableExtra(getString(R.string.user_profile_intent));
+
 
 
 
@@ -90,7 +92,17 @@ public class ViewUploadsActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
                 if (task.isSuccessful()) {
+                    System.out.println("VIEW UPLOADS");
                     updateListAdapter(task.getResult());
+                } else {
+                    Exception e = task.getException();
+                    if (e instanceof FirebaseFunctionsException) {
+                        FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                        FirebaseFunctionsException.Code code = ffe.getCode();
+                        Object details = ffe.getDetails();
+                        System.out.println(code + (String)details);
+                    }
+                    System.err.println(e.getMessage());
                 }
             }
         });
@@ -107,7 +119,7 @@ public class ViewUploadsActivity extends AppCompatActivity {
         FirebaseFunctions ff = FirebaseFunctions.getInstance();
 
         return ff
-                .getHttpsCallable("grabUserIdeas")
+                .getHttpsCallable("getUserIdeas")
                 .call(data)
                 .continueWith(new Continuation<HttpsCallableResult, HashMap<String, Object>>() {
                     @Override

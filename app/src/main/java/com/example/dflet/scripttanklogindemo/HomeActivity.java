@@ -49,19 +49,19 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.ViewExtracts:
+                    case R.id.ViewMyFiles:
                         menuItem.setChecked(true);
                         m_Layout.closeDrawers();
                         Intent intent = new Intent(HomeActivity.this,
-                                ViewExtractsActivity.class);
+                                ViewUploadsActivity.class);
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
-                    case R.id.UploadFiles:
+                    case R.id.IdeasSearch:
                         menuItem.setChecked(true);
                         m_Layout.closeDrawers();
                         intent = new Intent(HomeActivity.this,
-                                UploadFileActivity.class);
+                               writer_search.class);
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
@@ -93,13 +93,6 @@ public class HomeActivity extends AppCompatActivity {
                 logOut();
             }
         });
-        final Button button1 = findViewById(R.id.editorButton);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editorBoy.setText(m_User.getToken());
-            }
-        });
     }
 
     private void logOut() {
@@ -113,6 +106,7 @@ public class HomeActivity extends AppCompatActivity {
     private void setNavMenu() {
         if (m_User == null) {
             editorBoy.setText("Relaunch App");
+            //m_NavigationView.inflateHeaderView(R.layout.drawer_header_publisher);
             m_NavigationView.inflateMenu(R.xml.drawer_view_writer);
             return;
         }
@@ -121,17 +115,21 @@ public class HomeActivity extends AppCompatActivity {
         switch(m_User.type) {
             case "Writer":
                 m_Editor = (Editor)m_User;
+                //m_NavigationView.inflateHeaderView(R.layout.drawer_header_publisher);
                 m_NavigationView.inflateMenu(R.xml.drawer_view_writer);
                 return;
             case "Publisher":
                 m_Editor = (Editor)m_User;
+                //m_NavigationView.inflateHeaderView(R.layout.drawer_header_publisher);
                 m_NavigationView.inflateMenu(R.xml.drawer_view_publisher);
                 return;
             case "Editor":
                 m_Editor = (Editor)m_User;
+                //m_NavigationView.inflateHeaderView(R.layout.drawer_header_publisher);
                 m_NavigationView.inflateMenu(R.xml.drawer_view_editor);
                 return;
             default:
+               // m_NavigationView.inflateHeaderView(R.layout.drawer_header_publisher);
                 m_NavigationView.inflateMenu(R.xml.drawer_view_writer);
                 System.err.println("Navmenus: something unexpected happened!");
                 return;

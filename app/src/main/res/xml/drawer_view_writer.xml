@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/UploadFiles"
-            android:title="@string/upload_files" />
+            android:id="@+id/ViewMyFiles"
+            android:title="@string/view_files" />
     </group>
 </menu>
