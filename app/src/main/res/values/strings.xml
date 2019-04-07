@@ -33,4 +33,12 @@
     <string name="send_request">Send Request</string>
     <string name="view_files">View Files</string>
     <string name="send_message">Send Message</string>
+
+    <!-- Strings related to publisher search -->
+    <string name="search_titlebar">Search</string>
+    <string name="search_keywords">Enter keywords</string>
+    <string name="nothing_found">No books found</string>
+    <string name="placeholder">Placeholder</string>
+    <string name="search">Search</string>
+    <string name="demo">SearchUI Demo</string>
 </resources>
