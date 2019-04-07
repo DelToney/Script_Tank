@@ -16,6 +16,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -43,6 +44,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationData.put("title", message.getNotification().getTitle());
             notificationData.put("body", message.getNotification().getBody());
             buildNotification(notificationData);
+        } else {
+            Map<String, String> res_data = message.getData();
+            HashMap<String, String> sendData = new HashMap<>();
+            sendData.put("body", res_data.get("content"));
+            sendData.put("title", "Message Received");
+            buildNotification(sendData);
         }
     }
 

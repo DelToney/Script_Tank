@@ -27,6 +27,7 @@ import java.nio.file.Path;
 //db.
 public class DatabaseWriteService extends IntentService {
 
+    protected ScriptTankApplication myApp;
 
     public DatabaseWriteService() {
         super("DatabaseWriteService");
@@ -37,11 +38,12 @@ public class DatabaseWriteService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             try {
+                myApp = (ScriptTankApplication)this.getApplicationContext();
                 Bundle extra = intent.getExtras();
 
-                User newUser = (User)extra.get(getString(R.string.user_profile_intent));
+                User newUser = myApp.getM_User();
 
-                if (extra.getBoolean("DO_NOT_WRITE_TO_DB") == false) {
+                if (extra.getString("PROCESS").equals("ACCOUNT_CREATION")) {
                     FirebaseDatabase fb = FirebaseDatabase.getInstance("https://scripttankdemo.firebaseio.com/");
                     DatabaseReference myRef = fb.getReference("/Users/");
                     DatabaseReference pushRef = myRef.push(); //push new object to db
@@ -58,6 +60,7 @@ public class DatabaseWriteService extends IntentService {
                     newUser.setKey(pushRef.getKey());//grab unique identifier created from push operation
                     //this value in the future will be cached in a file on the device, along with the rest of the
                     //user object as well
+
                 }
 
                 writeUserToFile(newUser);

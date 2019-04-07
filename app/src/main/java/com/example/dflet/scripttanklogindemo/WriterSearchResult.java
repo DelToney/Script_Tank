@@ -1,13 +1,11 @@
 package com.example.dflet.scripttanklogindemo;
 
-import android.view.View;
-
-public class TestItem {
+public class WriterSearchResult {
     private int mImageResource;
     private String mText1;
     private String mText2;
 
-    public TestItem(int imageResource, String text1, String text2) {
+    public WriterSearchResult(int imageResource, String text1, String text2) {
         mImageResource = imageResource;
         mText1 = text1;
         mText2 = text2;

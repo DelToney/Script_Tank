@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewAdapterViewHolder> {
-    private ArrayList<TestItem> mItemList;
+public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewAdapterViewHolder> {
+    private ArrayList<WriterSearchResult> mItemList;
     public onItemClickListener mListener;
 
     public interface onItemClickListener {
@@ -29,20 +29,20 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewAdapterVie
 
 
     //view holder: gets values and assigns them for us
-    public static class ViewAdapterViewHolder extends RecyclerView.ViewHolder {
+    public class ViewAdapterViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
         public TextView mTextView1;
         public TextView mTextView2;
 
         public ViewAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.imageView);
-            mTextView1 = itemView.findViewById(R.id.testItem);
-            mTextView2 = itemView.findViewById(R.id.testItemDescr);
+            mImageView = itemView.findViewById(R.id.profilePicture);
+            mTextView1 = itemView.findViewById(R.id.ideaTitle);
+            mTextView2 = itemView.findViewById(R.id.authorName);
         }
     }
 
-    public ViewAdapter(ArrayList<TestItem> itemList) {
+    public SearchResultAdapter(ArrayList<WriterSearchResult> itemList) {
         mItemList = itemList;
 
     }
@@ -51,14 +51,14 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewAdapterVie
 
     @Override
     public ViewAdapterViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.placeholder_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_writer_search_result, parent, false);
         ViewAdapterViewHolder vavh = new ViewAdapterViewHolder(v);
         return vavh;
     }
     //goes through each element and makes a card for each
     @Override
     public void onBindViewHolder(@NonNull ViewAdapterViewHolder holder, int position) {
-        TestItem currentItem = mItemList.get(position);
+        WriterSearchResult currentItem = mItemList.get(position);
 
         holder.mImageView.setImageResource(currentItem.getImageResource());
         holder.mTextView1.setText(currentItem.getText1());

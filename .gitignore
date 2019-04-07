@@ -10,3 +10,5 @@
 .externalNativeBuild
 
 \.idea/render\.experimental\.xml
+
+\.idea/caches/

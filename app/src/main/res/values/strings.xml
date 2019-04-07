@@ -25,49 +25,21 @@
     <string name="log_out">Log Out</string>
 
     <string name="user_prof_file_name">user_prof</string>
-
-
-    //intent stuff
     <string name="user_profile_intent">USER_PROFILE</string>
-    <string name="layout_intent">com.android:ScriptTank.layout</string>
-    <string name="navMenu_intent">com.android:ScriptTank.navigationMenu</string>
-
-
-
-    <string name="uploads_toolbar">Your Uploads</string>
     <string name="upload_files">Upload Files</string>
     <string name="upload_file">Upload File</string>
-    <string name="view_uploads">View Your Uploads</string
-
-
-        >
     <string name="choose_file">Choose File</string>
     <string name="contact_writers">Contact Writers</string>
+    <string name="send_request">Send Request</string>
+    <string name="view_files">View My Files</string>
+    <string name="send_message">Send Message</string>
 
     <!-- Strings related to publisher search -->
-    <string name="search_keywords">Enter keywords</string>
-    <string name="search_writers">Enter writer\'s name</string>
-    <string name="search_categories">Search by Category</string>
-    <string name="search_fantasy">Fantasy</string>
-    <string name="search_scifi">Sci-Fi</string>
-    <string name="search_self_help">Self Help</string>
-    <string name="search_romance">Romance</string>
-    <string name="search_thriller">Thriller</string>
-    <string name="search_mystery">Mystery</string>
-    <string name="search_action">Action/Adventure</string>
-    <string name="search_drama">Drama</string>
-    <string name="search_satire">Satire</string>
     <string name="search_titlebar">Search</string>
-    <string name="search_suspense">Suspense</string>
-    <string name="search_historical_fic">Historical Fiction</string>
-    <string name="search_young_adult">Young Adult</string>
-    <string name="search_keywords_title">Search by Keyword</string>
-    <string name="search_writers_title">Search by Writer</string>
-    <string name="title_activity_view_uploads">ViewUploadsActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="search_keywords">Enter keywords</string>
+    <string name="nothing_found">No books found</string>
+    <string name="placeholder">Placeholder</string>
+    <string name="search">Search</string>
+    <string name="search_drawer">Search for Ideas</string>
+    <string name="demo">SearchUI Demo</string>
 </resources>

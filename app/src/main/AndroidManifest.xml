@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".ScriptTankApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -18,10 +19,9 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".writer_search"></activity>
 
-        <activity
-            android:name=".ViewUploadsActivity"
-            android:label="@string/title_activity_view_uploads"
-            android:theme="@style/NoActionBar"></activity>
+        <activity android:name=".ChatListActivity"></activity>
+        <activity android:name=".ChatActivity" />
+        <activity android:name=".ProfileActivity" />
 
         <service
             android:name=".MyFirebaseMessagingService"
@@ -38,7 +38,9 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".EditorListWritersActivity" />
+        <activity
+            android:name=".EditorListWritersActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".UploadFileActivity" />
         <activity android:name=".WelcomeActivity">
 
@@ -52,6 +54,7 @@
         </activity>
         <activity android:name=".LoginActivityST" />
         <activity android:name=".CreateAccountActivity" />
+        <activity android:name=".ViewUploadsActivity" />
 
         <service
             android:name=".DatabaseWriteService"

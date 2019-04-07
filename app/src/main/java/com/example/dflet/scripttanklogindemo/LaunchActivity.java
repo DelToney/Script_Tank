@@ -19,6 +19,7 @@ import java.io.ObjectInputStream;
 
 public class LaunchActivity extends AppCompatActivity {
     private static String filename;
+    protected ScriptTankApplication myApp;
     private final static int MY_PERMISSIONS_REQUEST_READ_WRITE_EXTERNAL = 87;
     private String[] files;
 
@@ -41,22 +42,31 @@ public class LaunchActivity extends AppCompatActivity {
                 fi.close();
             }catch (IOException IO) {
                 System.err.println(IO.getMessage());
-                finish();
+                this.deleteFile(getString(R.string.user_prof_file_name));
+                startWelcome();
+                return;
             } catch (ClassNotFoundException CNF) {
                 System.err.println(CNF.getMessage());
-                finish();
+                this.deleteFile(getString(R.string.user_prof_file_name));
+                startWelcome();
+                return;
             }
+            myApp = (ScriptTankApplication)this.getApplicationContext();
+            myApp.setM_User(userProf);
             Intent intent = new Intent(this, HomeActivity.class);
-            intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProf);
             startActivity(intent);
             finish();
 
         } else {
             System.out.println("File not stored on device");
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            startActivity(intent);
-            finish();
+            startWelcome();
         }
+    }
+
+    private void startWelcome() {
+        Intent intent = new Intent(this, WelcomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
