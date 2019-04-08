@@ -42,4 +42,7 @@
     <string name="search">Search</string>
     <string name="search_drawer">Search for Ideas</string>
     <string name="demo">SearchUI Demo</string>
+    <string name="title_activity_settings">Settings</string>
+
+
 </resources>

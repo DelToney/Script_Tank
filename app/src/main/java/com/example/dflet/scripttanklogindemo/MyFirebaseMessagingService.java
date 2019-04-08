@@ -24,6 +24,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String CHANNEL_ID = "55052";
     private NotificationCompat.Builder notification;
     private NotificationManager notificationManager;
+    protected ScriptTankApplication myApp;
     public MyFirebaseMessagingService() {
     }
 
@@ -59,11 +60,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         super.onNewToken(token);
+        myApp = (ScriptTankApplication)getApplicationContext();
+        User user = (User)myApp.getM_User();
+        user.setToken(token);
         sendTokenToServer(token);
+
     }
 
     private void sendTokenToServer(String token) {
-        // TODO
+        Intent intent = new Intent(MyFirebaseMessagingService.this, DatabaseWriteService.class);
+        intent.putExtra("PROCESS", "TOKEN_UPDATE");
+        intent.putExtra("token", token);
+        startService(intent);
     }
 
     private void buildNotification(HashMap<String, String> data) {

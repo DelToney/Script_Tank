@@ -4,5 +4,8 @@
         <item
             android:id="@+id/ViewMyFiles"
             android:title="@string/view_files" />
+        <item
+        android:id="@+id/settings"
+        android:title="@string/title_activity_settings" />
     </group>
 </menu>

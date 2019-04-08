@@ -130,23 +130,18 @@ public class LoginActivityST extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             ArrayList<HashMap<String, Object>> res_set = (ArrayList<HashMap<String, Object>>)task.getResult().get("data");
                             HashMap<String, Object> result = (HashMap<String, Object>)res_set.get(0);
-                            System.out.println(result);
                             String key = (String)task.getResult().get("key");
                             String token = (String)task.getResult().get("token");
-                            System.out.println("YO!!!! " + token);
                             String fb_id = (String)task.getResult().get(("fb_id"));
                             User userProfile = createProfile(email, (String)result.get("phoneNumber"),
                                     (String)result.get("name"), (String)result.get("type"), fb_id, token);
                             userProfile.setKey(key);
                             myApp = (ScriptTankApplication)LoginActivityST.this.getApplicationContext();
                             myApp.setM_User(userProfile);
-                            System.out.println("HAAHAH!: " + myApp.getM_User().getToken());
                             Intent intent = new Intent(LoginActivityST.this, DatabaseWriteService.class);
-                            //intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
                             intent.putExtra("PROCESS", "ACCOUNT_LOGIN");
                             startService(intent);
                             intent = new Intent(LoginActivityST.this, HomeActivity.class);
-                           // intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
                             startActivity(intent);
                             finish();

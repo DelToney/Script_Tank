@@ -38,32 +38,48 @@ public class DatabaseWriteService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             try {
-                myApp = (ScriptTankApplication)this.getApplicationContext();
                 Bundle extra = intent.getExtras();
+                String process = extra.getString("PROCESS");
+                if (process.equals("ACCOUNT_CREATION")) {
+                        myApp = (ScriptTankApplication) this.getApplicationContext();
 
-                User newUser = myApp.getM_User();
-
-                if (extra.getString("PROCESS").equals("ACCOUNT_CREATION")) {
-                    FirebaseDatabase fb = FirebaseDatabase.getInstance("https://scripttankdemo.firebaseio.com/");
-                    DatabaseReference myRef = fb.getReference("/Users/");
-                    DatabaseReference pushRef = myRef.push(); //push new object to db
-                    pushRef.setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                System.out.println("The Write was processed");
-                            } else {
-                                System.err.println(task.getException().getMessage());
+                        User newUser = myApp.getM_User();
+                        FirebaseDatabase fb = FirebaseDatabase.getInstance("https://scripttankdemo.firebaseio.com/");
+                        DatabaseReference myRef = fb.getReference("/Users/");
+                        DatabaseReference pushRef = myRef.push(); //push new object to db
+                        pushRef.setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    System.out.println("The Write was processed");
+                                } else {
+                                    System.err.println(task.getException().getMessage());
+                                }
                             }
-                        }
-                    });
-                    newUser.setKey(pushRef.getKey());//grab unique identifier created from push operation
-                    //this value in the future will be cached in a file on the device, along with the rest of the
-                    //user object as well
+                        });
+                        newUser.setKey(pushRef.getKey());//grab unique identifier created from push operation
+                        //this value in the future will be cached in a file on the device, along with the rest of the
+                        //user object as well
+                        writeUserToFile(newUser);
+
+                } else if (process.equals("ACCOUNT_LOGIN")) {
+                    myApp = (ScriptTankApplication) this.getApplicationContext();
+
+                    User loginUser = myApp.getM_User();
+                    writeUserToFile(loginUser);
+                } else if (process.equals("TOKEN_UPDATE")) {
+                    String token = extra.getString("token");
+                    myApp = (ScriptTankApplication) this.getApplicationContext();
+
+                    User user = myApp.getM_User();
+
+                    FirebaseDatabase fb = FirebaseDatabase.getInstance("https://scripttankdemo.firebaseio.com/");
+                    DatabaseReference myRef = fb.getReference("/Users/" + user.getKey() + "/");
+                    myRef.child("token").setValue(token);
+                    writeUserToFile(user);
 
                 }
 
-                writeUserToFile(newUser);
                 stopSelf();
             } catch (Exception e) {
                 System.err.println(e.getMessage());

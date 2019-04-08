@@ -4,6 +4,9 @@
         <item
             android:id="@+id/IdeasSearch"
             android:title="@string/search_drawer" />
+        <item
+            android:id="@+id/settings"
+            android:title="@string/title_activity_settings" />
 
     </group>
 </menu>

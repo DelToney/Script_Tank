@@ -1,7 +1,11 @@
 package com.example.dflet.scripttanklogindemo;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,9 +18,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -27,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     private static User m_User;
     private static Editor m_Editor;
     private TextView editorBoy;
+    private ImageView delPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +63,7 @@ public class HomeActivity extends AppCompatActivity {
         m_Layout = findViewById(R.id.drawer_layout);
         m_NavigationView = findViewById(R.id.nav_view);
         editorBoy = findViewById(R.id.editorTest);
+        delPic = findViewById(R.id.delPic);
         setNavMenu();
         m_NavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -81,6 +101,14 @@ public class HomeActivity extends AppCompatActivity {
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
+                    case R.id.settings:
+                        menuItem.setChecked(true);
+                        m_Layout.closeDrawers();
+                        intent = new Intent(HomeActivity.this,
+                                SettingsActivity.class);
+                        menuItem.setChecked(false);
+                        startActivity(intent);
+                        return true;
                     default:
                         return true;
                 }
@@ -93,6 +121,39 @@ public class HomeActivity extends AppCompatActivity {
                 logOut();
             }
         });
+        checkSettings();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkSettings();
+    }
+
+    private void checkSettings() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean delIsIdiot = sharedPreferences.getBoolean("delIsIdiot" , false);
+        if (delIsIdiot) {
+            editorBoy.setText("Del is Idiot");
+            getDelImage();
+        } else {
+            editorBoy.setText("");
+            delPic.setImageResource(android.R.color.transparent);
+        }
     }
 
     private void logOut() {
@@ -101,6 +162,30 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void getDelImage() {
+
+        try {
+            FirebaseStorage fs = FirebaseStorage.getInstance("gs://scripttankdemo.appspot.com");
+            StorageReference fRef = fs.getReference().child("del_boy.jpg");
+            fRef.getBytes(10 * 1024 * 1024).addOnCompleteListener(new OnCompleteListener<byte[]>() {
+                @Override
+                public void onComplete(@NonNull Task<byte[]> task) {
+                    if (task.isSuccessful()) {
+                        int size = task.getResult().length;
+                        byte[] img_bytes = task.getResult();
+                        Bitmap bitmap_tmp;
+                        bitmap_tmp = BitmapFactory.decodeByteArray(img_bytes, 0, size);
+                        delPic = findViewById(R.id.delPic);
+                        delPic.setImageBitmap(bitmap_tmp);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void setNavMenu() {

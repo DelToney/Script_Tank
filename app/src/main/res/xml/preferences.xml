@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+`  <android.support.v7.preference.PreferenceCategory
+        >
+
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:id="@+id/delIsIdiot"
+            android:defaultValue="false"
+            android:key="delIsIdiot"
+            android:summary="Switch on to say Del is Idiot"
+            android:title="Del is Idiot" />
+        </android.support.v7.preference.PreferenceCategory
+            >
+</PreferenceScreen>

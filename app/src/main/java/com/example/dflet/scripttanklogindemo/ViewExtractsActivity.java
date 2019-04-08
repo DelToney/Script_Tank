@@ -58,8 +58,6 @@ public class ViewExtractsActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
                 if (task.isSuccessful()) {
-
-
                     HashMap<String, Object> results = task.getResult();
                     ArrayList<String> keys = (ArrayList<String>)results.get("ids");
                     ArrayList<String> usernamesTemp = (ArrayList<String>)results.get("usernames");
