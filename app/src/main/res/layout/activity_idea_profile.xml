@@ -10,9 +10,8 @@
         android:id="@+id/Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -65,7 +64,7 @@
         tools:text="This is a preview for the example Idea! There will be an excerpt of the idea here." />
 
     <TextView
-        android:id="@+id/preview2"
+        android:id="@+id/Genre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -104,7 +103,7 @@
         app:layout_constraintVertical_bias="0.404" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/ProfilePicture"
         android:layout_width="106dp"
         android:layout_height="109dp"
         android:layout_marginStart="8dp"
@@ -122,7 +121,7 @@
         app:srcCompat="@drawable/ic_person_black_24dp" />
 
     <TextView
-        android:id="@+id/preview"
+        android:id="@+id/AuthorName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -160,7 +159,7 @@
         app:layout_constraintVertical_bias="0.547" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/BuyButton"
         android:layout_width="167dp"
         android:layout_height="76dp"
         android:layout_marginStart="8dp"
