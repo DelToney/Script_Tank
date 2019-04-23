@@ -38,4 +38,10 @@
     <string name="placeholder">Placeholder</string>
     <string name="search">Search</string>
     <string name="demo">SearchUI Demo</string>
+
+    <!-- Strings related to publisher idea preview -->
+    <string name="preview">Preview</string>
+    <string name="author">Author</string>
+    <string name="profile">Profile</string>
+    <string name="buy">Buy this idea!</string>
 </resources>
