@@ -23,6 +23,14 @@
         <activity android:name=".ChatListActivity" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".ProfileActivity" />
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".writer_search"></activity>
+
+        <activity
+            android:name=".ViewUploadsActivity"
+            android:label="@string/title_activity_view_uploads"
+            android:theme="@style/NoActionBar"></activity>
 
         <service
             android:name=".MyFirebaseMessagingService"
