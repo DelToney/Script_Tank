@@ -41,6 +41,7 @@
     <string name="nothing_found">No books found</string>
     <string name="placeholder">Placeholder</string>
     <string name="search">Search</string>
+    <string name="search_drawer">Search for Ideas</string>
     <string name="demo">SearchUI Demo</string>
 
     <!-- Strings related to publisher idea preview -->

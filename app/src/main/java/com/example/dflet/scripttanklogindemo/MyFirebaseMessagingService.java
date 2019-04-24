@@ -16,6 +16,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -23,6 +24,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String CHANNEL_ID = "55052";
     private NotificationCompat.Builder notification;
     private NotificationManager notificationManager;
+    protected ScriptTankApplication myApp;
     public MyFirebaseMessagingService() {
     }
 
@@ -43,6 +45,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationData.put("title", message.getNotification().getTitle());
             notificationData.put("body", message.getNotification().getBody());
             buildNotification(notificationData);
+        } else {
+            Map<String, String> res_data = message.getData();
+            HashMap<String, String> sendData = new HashMap<>();
+            sendData.put("body", res_data.get("content"));
+            sendData.put("title", "Message Received");
+            buildNotification(sendData);
         }
     }
 
@@ -52,11 +60,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         super.onNewToken(token);
+        myApp = (ScriptTankApplication)getApplicationContext();
+        User user = (User)myApp.getM_User();
+        user.setToken(token);
         sendTokenToServer(token);
+
     }
 
     private void sendTokenToServer(String token) {
-        // TODO
+        Intent intent = new Intent(MyFirebaseMessagingService.this, DatabaseWriteService.class);
+        intent.putExtra("PROCESS", "TOKEN_UPDATE");
+        intent.putExtra("token", token);
+        startService(intent);
     }
 
     private void buildNotification(HashMap<String, String> data) {
