@@ -33,6 +33,7 @@
     <string name="send_request">Send Request</string>
     <string name="view_files">View My Files</string>
     <string name="send_message">Send Message</string>
+    <string name="title_activity_view_uploads">View Uploads</string>
 
     <!-- Strings related to publisher search -->
     <string name="search_titlebar">Search</string>

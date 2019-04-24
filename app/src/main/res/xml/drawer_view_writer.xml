@@ -7,5 +7,12 @@
         <item
         android:id="@+id/settings"
         android:title="@string/title_activity_settings" />
+        
+        <item
+            android:id="@+id/UploadFiles"
+            android:title="@string/upload_files" />
+        <item
+        android:id="@+id/viewUploads"
+        android:title="View Uploads" />
     </group>
 </menu>

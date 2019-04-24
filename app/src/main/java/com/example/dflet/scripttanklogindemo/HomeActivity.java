@@ -85,6 +85,14 @@ public class HomeActivity extends AppCompatActivity {
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
+                    case R.id.viewUploads:
+                        menuItem.setChecked(true);
+                        m_Layout.closeDrawers();
+                        intent = new Intent(HomeActivity.this,
+                                ViewUploadsActivity.class);
+                        menuItem.setChecked(false);
+                        startActivity(intent);
+                        return true;
                     case R.id.contactWriters:
                         menuItem.setChecked(true);
                         m_Layout.closeDrawers();
