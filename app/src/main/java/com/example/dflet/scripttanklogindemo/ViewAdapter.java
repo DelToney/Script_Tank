@@ -36,9 +36,9 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewAdapterVie
 
         public ViewAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.imageView);
-            mTextView1 = itemView.findViewById(R.id.testItem);
-            mTextView2 = itemView.findViewById(R.id.testItemDescr);
+            mImageView = itemView.findViewById(R.id.editorPicture);
+            mTextView1 = itemView.findViewById(R.id.publisherName);
+            mTextView2 = itemView.findViewById(R.id.publisherName);
         }
     }
 

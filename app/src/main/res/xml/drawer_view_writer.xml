@@ -4,10 +4,10 @@
         <item
         android:id="@+id/UploadFiles"
         android:title="@string/upload_files" />
-        
+
         <item
-        android:id="@+id/viewUploads"
-        android:title="View Uploads" />
+        android:id="@+id/ViewEditorRequests"
+        android:title="@string/view_editor_requests" />
         
         <item
         android:id="@+id/ViewMyFiles"
