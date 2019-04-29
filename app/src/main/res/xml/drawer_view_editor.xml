@@ -6,8 +6,14 @@
             android:id="@+id/contactWriters"
             android:title="@string/contact_writers" />
         <item
+            android:id="@+id/viewRequestsDrawer"
+            android:title="View Requests" />
+        <item
             android:id="@+id/sendMessageDrawer"
             android:title="@string/send_message" />
+        <item
+            android:id="@+id/sendSuggestionDrawer"
+            android:title="Send a Publisher Suggestion" />
         <item
             android:id="@+id/settings"
             android:title="@string/title_activity_settings" />

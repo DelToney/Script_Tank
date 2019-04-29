@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapter.MyViewHolder> {
+public class ChatMessagesAdapter extends RecyclerView.Adapter {
 
     private Activity activity;
     private String user_id;
@@ -24,13 +24,13 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
     private LinearLayout layout;
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class MyRecvViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
 
         View view;
         TextView messageContent;
 
-        public MyViewHolder(View v) {
+        public MyRecvViewHolder(View v) {
             super(v);
             //v.setOnClickListener(this);
            messageContent = v.findViewById(R.id.messageContent);
@@ -42,26 +42,64 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
         }
     }
 
+    public static class MySentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        // each data item is just a string in this case
+
+        View view;
+        TextView messageContent;
+
+        public MySentViewHolder(View v) {
+            super(v);
+            //v.setOnClickListener(this);
+            messageContent = v.findViewById(R.id.messageContent);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mListener.onItemClicked(getAdapterPosition());
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+
+        if (ids.get(position).compareTo(this.user_id) == 0) {
+            // If the current user is the sender of the message
+            return 1;
+        } else {
+            // If some other user sent the message
+            return 0;
+        }
+    }
+
     public void setOnItemClickListener(ChatClickListener listener) {
         mListener = listener;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent,
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent,
                                            int viewType) {
        LayoutInflater inflater = activity.getLayoutInflater();
 
+       if (viewType == 0) {
 
 
-
-        View rowView = inflater.inflate(R.layout.chat_item, null, true);
-
+           View rowView = inflater.inflate(R.layout.chat_item, null, true);
 
 
+           MyRecvViewHolder vh = new MyRecvViewHolder(rowView);
+           return vh;
+       } else if (viewType == 1) {
+           View rowView = inflater.inflate(R.layout.chat_item_sent, null, true);
 
-        MyViewHolder vh = new MyViewHolder(rowView);
-        return vh;
+
+           MySentViewHolder vh = new MySentViewHolder(rowView);
+           return vh;
+       }
+
+       return null;
     }
 
 
@@ -79,23 +117,17 @@ public class ChatMessagesAdapter extends RecyclerView.Adapter<ChatMessagesAdapte
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
+        if (holder.getItemViewType() == 0) {
+                MyRecvViewHolder h = ((MyRecvViewHolder)holder);
+                h.messageContent.setText(messages.get(position));
 
-        holder.messageContent.setText(messages.get(position));
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)holder.messageContent.getLayoutParams();
-        if (ids.get(position).compareTo(this.user_id) != 0) {
 
-            params.addRule(RelativeLayout.ALIGN_PARENT_START);
-            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-           //holder.messageContent.setBackgroundColor(Color.MAGENTA);
-            holder.messageContent.setLayoutParams(params);
-        } else {
-          //  holder.messageContent.setBackgroundColor(Color.GREEN);
-            params.addRule(RelativeLayout.ALIGN_PARENT_END);
-            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            holder.messageContent.setLayoutParams(params);
+            } else {
+                MySentViewHolder h = ((MySentViewHolder) holder);
+                h.messageContent.setText(messages.get(position));
         }
 
 

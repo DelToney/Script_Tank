@@ -2,8 +2,6 @@
     <string name="app_name">ScriptTankLoginDemo</string>
     <string name="title_activity_login">Sign in</string>
 
-    <string name="title_activity_view_uploads">View Uploads</string>
-
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -32,7 +30,7 @@
     <string name="upload_file">Upload File</string>
     <string name="choose_file">Choose File</string>
     <string name="contact_writers">Contact Writers</string>
-    <string name="send_request">Send Request</string>
+    <string name="send_request">SEND REQUEST</string>
     <string name="view_files">View My Files</string>
     <string name="send_message">Send Message</string>
 
@@ -45,6 +43,9 @@
     <string name="search_drawer">Search for Ideas</string>
     <string name="demo">SearchUI Demo</string>
     <string name="title_activity_settings">Settings</string>
+
+
+    <string name="request_fragment">Request from </string>
 
 
 </resources>

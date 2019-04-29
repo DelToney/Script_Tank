@@ -46,6 +46,7 @@ public class HomeActivity extends AppCompatActivity {
     private static Editor m_Editor;
     private TextView editorBoy;
     private ImageView delPic;
+    private boolean imgAlreadySet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,14 +86,6 @@ public class HomeActivity extends AppCompatActivity {
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
-                    case R.id.viewUploads:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        intent = new Intent(HomeActivity.this,
-                                ViewUploadsActivity.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
                     case R.id.contactWriters:
                         menuItem.setChecked(true);
                         m_Layout.closeDrawers();
@@ -117,6 +110,22 @@ public class HomeActivity extends AppCompatActivity {
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
+                    case R.id.sendSuggestionDrawer:
+                        menuItem.setChecked(true);
+                        m_Layout.closeDrawers();
+                        intent = new Intent(HomeActivity.this,
+                                PublisherSuggestionActivity.class);
+                        menuItem.setChecked(false);
+                        startActivity(intent);
+                        return true;
+                    case R.id.viewRequestsDrawer:
+                        menuItem.setChecked(true);
+                        m_Layout.closeDrawers();
+                        intent = new Intent(HomeActivity.this,
+                                RequestListActivity.class);
+                        menuItem.setChecked(false);
+                        startActivity(intent);
+                        return true;
                     default:
                         return true;
                 }
@@ -129,6 +138,7 @@ public class HomeActivity extends AppCompatActivity {
                 logOut();
             }
         });
+        imgAlreadySet = false;
         checkSettings();
 
     }
@@ -156,9 +166,13 @@ public class HomeActivity extends AppCompatActivity {
                 PreferenceManager.getDefaultSharedPreferences(this);
         Boolean delIsIdiot = sharedPreferences.getBoolean("delIsIdiot" , false);
         if (delIsIdiot) {
-            editorBoy.setText("Del is Idiot");
-            getDelImage();
+            if (!(imgAlreadySet)) {
+                imgAlreadySet = true;
+                editorBoy.setText("Del is Idiot");
+                getDelImage();
+            }
         } else {
+            imgAlreadySet = false;
             editorBoy.setText("");
             delPic.setImageResource(android.R.color.transparent);
         }

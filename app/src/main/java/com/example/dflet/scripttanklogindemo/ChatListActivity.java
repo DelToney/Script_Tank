@@ -76,7 +76,7 @@ public class ChatListActivity extends AppCompatActivity {
 
         ArrayList<String> tempNames, tempKeys;
         tempKeys = (ArrayList<String>)results.get("keys");
-        tempNames = (ArrayList<String>)results.get("friends");
+        tempNames = (ArrayList<String>)results.get("friend_names");
         thread_ids = (ArrayList<String>)results.get("threads");
         if (!(keys.isEmpty()))
             keys.clear();

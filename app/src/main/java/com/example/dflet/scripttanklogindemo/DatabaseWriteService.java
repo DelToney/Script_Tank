@@ -4,14 +4,23 @@ import android.app.Application;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONObject;
 
@@ -28,11 +37,25 @@ import java.nio.file.Path;
 public class DatabaseWriteService extends IntentService {
 
     protected ScriptTankApplication myApp;
+    private static int lastInId;
 
     public DatabaseWriteService() {
         super("DatabaseWriteService");
+
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        myApp = (ScriptTankApplication)this.getApplicationContext();
+    }
+
+
+        @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        lastInId = startId;
+        return super.onStartCommand(intent,flags,startId);
+    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -40,8 +63,9 @@ public class DatabaseWriteService extends IntentService {
             try {
                 Bundle extra = intent.getExtras();
                 String process = extra.getString("PROCESS");
-                if (process.equals("ACCOUNT_CREATION")) {
-                        myApp = (ScriptTankApplication) this.getApplicationContext();
+                switch (process) {
+                    case "ACCOUNT_CREATION":
+
 
                         User newUser = myApp.getM_User();
                         FirebaseDatabase fb = FirebaseDatabase.getInstance("https://scripttankdemo.firebaseio.com/");
@@ -61,26 +85,34 @@ public class DatabaseWriteService extends IntentService {
                         //this value in the future will be cached in a file on the device, along with the rest of the
                         //user object as well
                         writeUserToFile(newUser);
+                        break;
+                    case "ACCOUNT_LOGIN":
+                        User loginUser = myApp.getM_User();
+                        writeUserToFile(loginUser);
+                        break;
+                    case "TOKEN_UPDATE":
+                        String token = extra.getString("token");
 
-                } else if (process.equals("ACCOUNT_LOGIN")) {
-                    myApp = (ScriptTankApplication) this.getApplicationContext();
 
-                    User loginUser = myApp.getM_User();
-                    writeUserToFile(loginUser);
-                } else if (process.equals("TOKEN_UPDATE")) {
-                    String token = extra.getString("token");
-                    myApp = (ScriptTankApplication) this.getApplicationContext();
+                        User user = myApp.getM_User();
 
-                    User user = myApp.getM_User();
+                        FirebaseDatabase fb_token = FirebaseDatabase.getInstance("https://scripttankdemo.firebaseio.com/");
+                        DatabaseReference myRef_token = fb_token.getReference("/Users/" + user.getKey() + "/");
+                        myRef_token.child("token").setValue(token);
+                        writeUserToFile(user);
+                        break;
 
-                    FirebaseDatabase fb = FirebaseDatabase.getInstance("https://scripttankdemo.firebaseio.com/");
-                    DatabaseReference myRef = fb.getReference("/Users/" + user.getKey() + "/");
-                    myRef.child("token").setValue(token);
-                    writeUserToFile(user);
-
+                    case "DOWNLOAD_FILE":
+                        //TO-DO
+                        break;
+                    case "UPLOAD_FILE":
+                        Uri userFileURI = (Uri)extra.get("user_uri");
+                        uploadFile(grabFileTitle(userFileURI), userFileURI);
+                        break;
+                    default:
+                        break;
                 }
-
-                stopSelf();
+                stopSelf(lastInId);
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
@@ -96,11 +128,60 @@ public class DatabaseWriteService extends IntentService {
             objOut.writeObject(newUser);
             objOut.close();
             outputStream.close();
-            System.out.println("The Object  was succesfully written to a file");
         } catch (FileNotFoundException FNF) {
             System.err.println(FNF.getMessage());
         } catch (IOException IO) {
             System.err.println(IO.getMessage());
+        }
+    }
+
+    private String grabFileTitle(Uri userFileUri) {
+
+        String name = "";
+        Cursor cursor = getContentResolver()
+                .query(userFileUri, null, null, null, null, null);
+
+        try {
+
+            if (cursor != null && cursor.moveToFirst()) {
+
+
+                name = cursor.getString(
+                        cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+        } finally {
+            cursor.close();
+        }
+        return name;
+    }
+
+    private void uploadFile(String name, Uri userFileUri) {
+        try {
+
+            User m_User = myApp.getM_User();
+            FirebaseStorage fs = FirebaseStorage.getInstance("gs://scripttankdemo.appspot.com");
+            String serverPath = "Files/" + m_User.key + "/" + name;
+            StorageReference fRef = fs.getReference().child(serverPath);
+            UploadTask ut = fRef.putFile(userFileUri);
+            ut.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    System.err.println(exception.getMessage());
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(DatabaseWriteService.this,
+                            "File Upload Successful", Toast.LENGTH_LONG).show();
+                    System.out.println("File Uploaded!");
+                }
+            });
+        } catch (Exception FNF) {
+            System.err.println(FNF.getMessage());
         }
     }
 }

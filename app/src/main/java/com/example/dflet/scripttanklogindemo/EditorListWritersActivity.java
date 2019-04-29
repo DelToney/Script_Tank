@@ -175,8 +175,7 @@ public class EditorListWritersActivity extends AppCompatActivity {
 
     private Task<HashMap<String, Object>> grabAllWriters() {
         Map<String, Object> data = new HashMap<>();
-        data.put("push", true); //always include this, please. It is unknown what happeneds,
-                                        // if it ain't there.
+
 
         FirebaseFunctions ff = FirebaseFunctions.getInstance();
 
@@ -195,7 +194,7 @@ public class EditorListWritersActivity extends AppCompatActivity {
     private Task<String> sendEditorRequest(String body, String key) {
 
         Map<String, Object> data = new HashMap<>();
-        data.put("push", true);
+
         data.put("body", body);
         data.put("dest_key", key);
 

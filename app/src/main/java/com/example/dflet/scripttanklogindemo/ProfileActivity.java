@@ -42,8 +42,12 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
                 if (task.isSuccessful()) {
+
                     HashMap<String, Object> result = task.getResult();
-                    setProfileContent(result);
+                    HashMap<String, Object> profile = (HashMap)result.get("profile");
+                    String status = result.get("status").toString();
+                    setProfileContent(profile);
+                    updateRequestButtonText(status);
                 }
             }
         });
@@ -51,7 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (requestButton.getText().equals("Request Pending"))
+                if (!(requestButton.getText().equals("SEND REQUEST")))
                     return;
 
                 String sender_name = myApp.getM_User().name;
@@ -102,6 +106,7 @@ public class ProfileActivity extends AppCompatActivity {
         Map<String, Object> data = new HashMap<>();
         data.put("push", true);
         data.put("key", key);
+        data.put("viewer_key", myApp.getM_User().getKey());
 
         FirebaseFunctions ff = FirebaseFunctions.getInstance();
 
@@ -156,6 +161,22 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void updateRequestButtonText(String text) {
-        requestButton.setText(text);
+
+        switch (text) {
+            case "STATUS_PENDING":
+                requestButton.setText("REQUEST PENDING");
+                break;
+            case "STATUS_ACCEPTED":
+                requestButton.setEnabled(false);
+                requestButton.setText("GO TO MESSAGES");
+                break;
+            case "STATUS_DENIED":
+                requestButton.setEnabled(false);
+                requestButton.setText("DENIED!");
+                break;
+            default:
+                requestButton.setText("SEND REQUEST");
+        }
+
     }
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/messagesLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="right"
+    android:orientation="horizontal" >
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/messageContent"
+        android:layout_height="wrap_content"
+
+        android:layout_width="wrap_content"
+        android:maxWidth="240dp"
+        android:padding="8dp"
+        android:textColor="#000000"
+        android:background="@drawable/message_background"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        >
+
+    </TextView>
+
+
+</RelativeLayout>
+
+<!--<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/messagesLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/messageContent"
+        android:layout_height="wrap_content"
+
+        android:layout_width="100dp"
+        android:maxWidth="240dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:background="@drawable/message_background"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+    </TextView>
+
+
+</android.support.constraint.ConstraintLayout> -->

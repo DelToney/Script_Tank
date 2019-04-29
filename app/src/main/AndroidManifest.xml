@@ -16,21 +16,18 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
-
         android:theme="@style/AppTheme">
-        <activity android:name=".SettingsActivity"
-            android:theme="@style/AppTheme"></activity>
+        <activity android:name=".PublisherSuggestionActivity"></activity>
+        <activity android:name=".RequestListActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/AppTheme" />
         <activity android:name=".writer_search" />
         <activity android:name=".ChatListActivity" />
-        <activity android:name=".ChatActivity" />
-        <activity android:name=".ProfileActivity" />
-
-
         <activity
-            android:name=".ViewUploadsActivity"
-            android:label="@string/title_activity_view_uploads"
-            android:theme="@style/NoActionBar"></activity>
+            android:name=".ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ProfileActivity" />
 
         <service
             android:name=".MyFirebaseMessagingService"
@@ -47,9 +44,9 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".EditorListWritersActivity"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+        <activity
+            android:name=".EditorListWritersActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".UploadFileActivity" />
         <activity android:name=".WelcomeActivity">
 
@@ -63,6 +60,7 @@
         </activity>
         <activity android:name=".LoginActivityST" />
         <activity android:name=".CreateAccountActivity" />
+        <activity android:name=".ViewUploadsActivity" />
 
         <service
             android:name=".DatabaseWriteService"

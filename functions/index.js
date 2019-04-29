@@ -10,7 +10,7 @@ exports.grabAllUsers = functions.https.onCall((data, context) => {
     const fb = admin.database().ref("/Users/");
     return fb.once('value').then(dataSnapshot => {
         dataSnapshot.forEach(ds => {
-                names.push(ds.child("name").val())
+           names.push(ds.child("name").val())
         });
         return {name: names};
         });
@@ -139,7 +139,7 @@ exports.sendMessageFCM = functions.https.onCall((data, context) => {
                                        }).catch(function (error) {
                                            console.log("Error sending message", error);
                                        });
-        //return ;
+
 
         });
 
@@ -182,9 +182,24 @@ exports.loadUserProfileByKey = functions.https.onCall((data, context) => {
 
     console.log("L:/", "CALLED_LOAD_USER_PROFILE_KEY", context.auth.uid);
     const key = data.key;
+    const view_key = data.viewer_key;
     const fb = admin.database().ref("/Users/" + key);
     return fb.once('value').then(dataSnapshot => {
-        return dataSnapshot.val();
+
+        var status = "NO_REQUEST";
+        var req_snap = dataSnapshot.child("Requests");
+        if (req_snap.hasChild(view_key)) {
+            status = "CHECK_REQUEST";
+            var ref = req_snap.child(view_key).val();
+            const req_db = admin.database().ref("/Requests/" + ref + "/status/");
+            req_db.on('value', function(statShot) {
+                status = statShot.val();
+            });
+        }
+
+        return {profile: dataSnapshot.val(), status: status};
+
+
         });
     });
 
@@ -202,11 +217,11 @@ exports.createRequest = functions.https.onCall((data, context) => {
         var user_deliverable = {};
         recv_deliverable[user_key] = req_key;
         user_deliverable[recv_key] = req_key;
-        const user_update = admin.database().ref("/Users/" + user_key + "/Requests/").update(
-        user_deliverable);
+        //const user_update = admin.database().ref("/Users/" + user_key + "/Requests/").update(
+        //user_deliverable);
         const recv_update = admin.database().ref("/Users/" + recv_key + "/Requests/").update(
         recv_deliverable);
-        return Promise.all([user_update, recv_update]);
+        return Promise.all([recv_update]);
         });
     });
 
@@ -257,7 +272,7 @@ exports.searchForIdeas = functions.https.onCall((data, context) => {
       });
     });
 
-    console.log("L:/", "CALLED_CREATE_REQUEST", context.auth.uid);
+   /* console.log("L:/", "CALLED_CREATE_REQUEST", context.auth.uid);
     const user_key = data.user_key;
     const recv_key = data.receiver_key;
     const inital_status = "STATUS_PENDING";
@@ -275,7 +290,7 @@ exports.searchForIdeas = functions.https.onCall((data, context) => {
         recv_deliverable);
         return Promise.all([user_update, recv_update]);
         });
-    });
+    });*/
 
 exports.grabUserFriends = functions.https.onCall((data, context) => {
 
@@ -283,33 +298,46 @@ exports.grabUserFriends = functions.https.onCall((data, context) => {
     var names = [];
     var thread_ids = [];
     var keys = [];
+    var friend_ids = [];
     console.log("L:/", "CALLED_GRAB_USER_FRIENDS", context.auth.uid);
     const fb = admin.database().ref("/Users/" + user_id + "/Messages/");
-    return fb.once('value').then(dataSnapshot => {
+    var sender_data = fb.once('value').then(dataSnapshot => {
         dataSnapshot.forEach(ds => {
               var friend_id = ds.key;
               var thread_id = ds.val();
               var friend_name = "";
               var id = "";
-              admin.database().ref("/Users/" + friend_id).on('value', function(value) {
-                id = value.key;
-                friend_name = value.child("name").val();
-                keys.push(id)
-                names.push(friend_name);
-                thread_ids.push(thread_id)
+              friend_ids.push(friend_id);
+              thread_ids.push(thread_id);
+
+
+        });
+            return {friend_ids: friend_ids,
+                                     threads: thread_ids};
+        });
+    var receiver_data =  sender_data.then(function(result) {
+        result["friend_ids"].forEach(friend => {
+              admin.database().ref("/Users/" + friend).on('value', function(value) {
+                              id = value.key;
+                               friend_name = value.child("name").val();
+                               keys.push(id)
+                               names.push(friend_name);
+
 
               }, function(errorObject) {
-                console.log("Failure: " + errorObject.code);
+                 console.log("Failure: " + errorObject.code);
               });
+          });
+                return {names: names,
+                keys: keys};
+          });
+    return Promise.all([sender_data, receiver_data]).then(function([result_send, result_recv]) {
 
-
-
-        });
-            return {friends: names,
-                                     threads: thread_ids,
-                                     keys: keys};
-        });
-
+            return {friend_names: result_recv["names"],
+                    keys: result_recv["keys"],
+                    friend_ids: result_send["friend_ids"],
+                    threads: result_send["threads"]};
+    });
 
 
 
@@ -336,7 +364,108 @@ exports.retrieveMessages = functions.https.onCall((data, context) => {
 
     });
 
+exports.handleWriterRequest = functions.https.onCall((data, context) => {
+
+    const response = data.response;
+    const req_id = data.req_id;
+    const requester_id = data.requester_id;
+    const user_id = data.user_id;
+    console.log("L:/", "CALLED_WRITER_HANDLE_REQUEST", context.auth.uid);
+    if (response === "ACCEPT_REQ") {
+            //add Writer to Editors' permissions, delete request from user folders and request folder.
+
+    } else if (response === "REJECT_REQ") {
+           //change request status, keep request in folder for denial
+    }
+
+});
+
+exports.handleEditorRequest = functions.https.onCall((data, context) => {
+
+    const response = data.response;
+    const req_id = data.req_id;
+    const requester_id = data.requester_id;
+    const user_id = data.user_id;
+    console.log("L:/", "CALLED_EDITOR_HANDLE_REQUEST", context.auth.uid);
+    if (response === "ACCEPT_REQ") {
+            //add Writer to Editors' permissions, delete request from user folders and request folder.
+
+    } else if (response === "REJECT_REQ") {
+           //change request status, keep request in folder for denial
+    }
+
+});
+
+exports.grabUserRequests = functions.https.onCall((data, context) => {
+
+    const user_id = data.user_id;
+    var names = [];
+    var user_ids = [];
+    var request_ids = [];
+    console.log("L:/", "CALLED_GRAB_USER_REQUESTS", context.auth.uid);
+    const fb = admin.database().ref("/Users/" + user_id + "/Requests/");
+    var request_data = fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+              var user_id = ds.key;
+              var request_id = ds.val();
+              var other_name = "";
+              user_ids.push(user_id);
+              request_ids.push(request_id);
 
 
+        });
+            return {user_ids: user_ids,
+                                     requests: request_ids};
+        });
+    var receiver_data =  request_data.then(function(result) {
+        result["user_ids"].forEach(user => {
+              admin.database().ref("/Users/" + user).on('value', function(value) {
+
+                               name = value.child("name").val();
+
+                               names.push(name);
+
+
+              }, function(errorObject) {
+                 console.log("Failure: " + errorObject.code);
+              });
+          });
+                return {names: names,
+                };
+          });
+    return Promise.all([request_data, receiver_data]).then(function([result_request, result_recv]) {
+
+            return {names: result_recv["names"],
+
+                    user_ids: result_request["user_ids"],
+                    request_ids: result_request["requests"]};
+    });
+
+
+
+    });
+
+
+exports.checkRequestStatus = functions.https.onCall((data, context) => {
+
+    const request_id = data.request_id;
+    console.log("L:/", "CALLED_CHECK_REQUEST", context.auth.uid);
+    const fb = admin.database().ref("/Requests/" + request_id + "/status/");
+    var request_data = fb.once('value').then(dataSnapshot => {
+        return {status: dataSnapshot};
+    });
+
+});
+
+exports.getRequestId = functions.https.onCall((data, context) => {
+
+    const request_id = data.request_id;
+    console.log("L:/", "CALLED_CHECK_REQUEST", context.auth.uid);
+    const fb = admin.database().ref("/Requests/" + request_id + "/status/");
+    var request_data = fb.once('value').then(dataSnapshot => {
+        return {status: dataSnapshot};
+    });
+
+});
 
 
