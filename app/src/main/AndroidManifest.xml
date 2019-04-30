@@ -16,7 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".IdeaProfile"></activity>
+        <activity android:name=".publisher_profile"></activity>
+        <activity android:name=".PublisherIdeaList" />
+        <activity android:name=".IdeaProfile" />
         <activity android:name=".writer_search" />
 
         <service
