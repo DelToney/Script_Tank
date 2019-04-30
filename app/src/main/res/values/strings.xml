@@ -60,6 +60,12 @@
     <string name="search_drawer">Search for Ideas</string>
     <string name="demo">SearchUI Demo</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="author_bio">Author Bio</string>
+    <string name="view_ideas">View Ideas</string>
+
+    <string name="feed_item">Feed Item</string>
+    <string name="feed_item_desc">Feed Item Desc</string>
+
 
     <!-- Strings related to publisher idea preview -->
     <string name="preview">Preview</string>

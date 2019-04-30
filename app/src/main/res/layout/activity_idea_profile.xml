@@ -94,7 +94,7 @@
         tools:text="Genre" />
 
     <TextView
-        android:id="@+id/AuthorTitle"
+        android:id="@+id/AuthorBio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/writerPicture"
@@ -116,7 +116,6 @@
 
     <Button
         android:id="@+id/ProfileButton"
-        android:layout_width="f1f2"
         android:layout_height="42dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
