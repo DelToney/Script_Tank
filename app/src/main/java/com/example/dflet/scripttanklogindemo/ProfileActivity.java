@@ -65,7 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<String> task) {
                         if (task.isSuccessful()) {
                             System.out.println("The message was successful " + task.getResult());
-                            updateRequestButtonText("Request Pending");
+                            updateRequestButtonText("STATUS_PENDING");
                             createRequestObject(myApp.getM_User().key, profileID).addOnCompleteListener(new OnCompleteListener<String>() {
                                 @Override
                                 public void onComplete(@NonNull Task<String> task) {
@@ -104,7 +104,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Task<HashMap<String, Object>> grabUserProfile(String key) {
 
         Map<String, Object> data = new HashMap<>();
-        data.put("push", true);
+
         data.put("key", key);
         data.put("viewer_key", myApp.getM_User().getKey());
 
@@ -168,7 +168,7 @@ public class ProfileActivity extends AppCompatActivity {
                 break;
             case "STATUS_ACCEPTED":
                 requestButton.setEnabled(false);
-                requestButton.setText("GO TO MESSAGES");
+                requestButton.setText("REQUEST ACCEPTED");
                 break;
             case "STATUS_DENIED":
                 requestButton.setEnabled(false);

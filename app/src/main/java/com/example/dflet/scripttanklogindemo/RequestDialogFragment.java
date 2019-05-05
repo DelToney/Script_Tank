@@ -30,7 +30,9 @@ public class RequestDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
+        userName = getArguments().getString("userName");
+        user_id = getArguments().getString("user_id");
+        request_id = getArguments().getString("request_id");
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setTitle("Handle Request");
         alertDialogBuilder.setMessage("Do you accept " + userName + "'s request?");
@@ -38,14 +40,14 @@ public class RequestDialogFragment extends DialogFragment {
         alertDialogBuilder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                ((RequestListActivity)getActivity()).handleWriterRequest("ACCEPT_REQ", request_id, user_id);
+                ((RequestListActivity)getActivity()).handleRequest("ACCEPT_REQ", request_id, user_id);
             }
         });
         alertDialogBuilder.setNegativeButton("Reject", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ((RequestListActivity)getActivity()).handleWriterRequest("REJECT_REQ", request_id, user_id);
+                ((RequestListActivity)getActivity()).handleRequest("REJECT_REQ", request_id, user_id);
                 dialog.dismiss();
             }
         });

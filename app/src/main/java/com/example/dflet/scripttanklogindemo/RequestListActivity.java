@@ -135,7 +135,7 @@ public class RequestListActivity extends AppCompatActivity implements RequestDia
     }
 
 
-    public Task<String> handleWriterRequest(String result, String request_id, String requester_id) {
+    public Task<String> handleRequest(String result, String request_id, String requester_id) {
         Map<String, Object> data = new HashMap<>();
         String user_id = myApp.getM_User().getKey();
         data.put("user_id", user_id);
@@ -146,7 +146,7 @@ public class RequestListActivity extends AppCompatActivity implements RequestDia
         FirebaseFunctions ff = FirebaseFunctions.getInstance();
 
         return ff
-                .getHttpsCallable("handleWriterRequest")
+                .getHttpsCallable("handleRequest")
                 .call(data)
                 .continueWith(new Continuation<HttpsCallableResult, String>() {
                     @Override

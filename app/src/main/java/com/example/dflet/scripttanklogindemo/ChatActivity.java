@@ -35,7 +35,8 @@ public class ChatActivity extends AppCompatActivity {
     private ChatMessagesAdapter adapter;
 
     private EditText messageArea;
-    private static ArrayList<String> messages, ids;
+    private ArrayList<String> messages, ids;
+    private String thread_id;
     protected ScriptTankApplication myApp;
     protected String receiver_id;
 
@@ -46,6 +47,7 @@ public class ChatActivity extends AppCompatActivity {
         messages = new ArrayList<>();
         ids = new ArrayList<>();
         receiver_id = getIntent().getStringExtra("receiver_id");
+        thread_id = getIntent().getStringExtra("thread_id");
         myApp = (ScriptTankApplication)getApplicationContext();
         String user_id = myApp.getM_User().getKey();
         chat = findViewById(R.id.chatAreaRecycleView);
@@ -89,7 +91,7 @@ public class ChatActivity extends AppCompatActivity {
                 messageArea.setText("");
             }
         });
-        retrieveMessages(getIntent().getStringExtra("thread_id")).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
+        retrieveMessages().addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
             @Override
             public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
                 if (task.isSuccessful()) {
@@ -145,6 +147,9 @@ public class ChatActivity extends AppCompatActivity {
         String id = myApp.getM_User().getKey();
         data.put("recv_id", receiver_id);
         data.put("sender_id", id);
+        data.put("thread_id", thread_id);
+
+
 
         FirebaseFunctions ff = FirebaseFunctions.getInstance();
 
@@ -160,7 +165,7 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private Task<HashMap<String, Object>> retrieveMessages(String thread_id) {
+    private Task<HashMap<String, Object>> retrieveMessages() {
         HashMap<String, Object> data = new HashMap<>();
         data.put("thread_id", thread_id);
 

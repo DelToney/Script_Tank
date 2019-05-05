@@ -55,6 +55,26 @@ exports.grabAllWriters = functions.https.onCall((data, context) => {
         });
     });
 
+exports.grabAllPublishers = functions.https.onCall((data, context) => {
+
+    var writers = [];
+    var keys = [];
+    console.log("L:/", "CALLED_GRAB_ALL_PUBS", context.auth.uid);
+    const fb = admin.database().ref("/Users/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+                var type = ds.child("type").val();
+                if (type === "Publisher") {
+                    writers.push(ds.child("name").val())
+                    keys.push(ds.key);
+                }
+        });
+
+        return {names: writers,
+                db_ids: keys};
+        });
+    });
+
 exports.searchForWriters = functions.https.onCall((data, context) => {
 
     const query = data.query.toLowerCase();
@@ -112,8 +132,9 @@ exports.sendMessageFCM = functions.https.onCall((data, context) => {
     const msg_content = data.content;
     const rid = data.recv_id;
     const sid = data.sender_id;
+    const thread_id = data.thread_id;
     console.log("L:/", "CALLED_SEND_MESSAGE", rid);
-    const msg_path = "/Messages/sampleThread/";
+    const msg_path = "/Messages/" + thread_id;
     const recv_path = "/Users/" + rid + "/token"
     const db_data = {
         content: msg_content,
@@ -187,7 +208,7 @@ exports.loadUserProfileByKey = functions.https.onCall((data, context) => {
     return fb.once('value').then(dataSnapshot => {
 
         var status = "NO_REQUEST";
-        var req_snap = dataSnapshot.child("Requests");
+        var req_snap = dataSnapshot.child("RequestsReceived");
         if (req_snap.hasChild(view_key)) {
             status = "CHECK_REQUEST";
             var ref = req_snap.child(view_key).val();
@@ -195,6 +216,12 @@ exports.loadUserProfileByKey = functions.https.onCall((data, context) => {
             req_db.on('value', function(statShot) {
                 status = statShot.val();
             });
+        } else {
+            var msg_snap = dataSnapshot.child("Messages");
+             if (msg_snap.hasChild(view_key)) {
+                    status = "STATUS_ACCEPTED";
+
+            }
         }
 
         return {profile: dataSnapshot.val(), status: status};
@@ -217,9 +244,9 @@ exports.createRequest = functions.https.onCall((data, context) => {
         var user_deliverable = {};
         recv_deliverable[user_key] = req_key;
         user_deliverable[recv_key] = req_key;
-        //const user_update = admin.database().ref("/Users/" + user_key + "/Requests/").update(
-        //user_deliverable);
-        const recv_update = admin.database().ref("/Users/" + recv_key + "/Requests/").update(
+        const user_update = admin.database().ref("/Users/" + user_key + "/RequestsSent/").update(
+        user_deliverable);
+        const recv_update = admin.database().ref("/Users/" + recv_key + "/RequestsReceived/").update(
         recv_deliverable);
         return Promise.all([recv_update]);
         });
@@ -363,38 +390,52 @@ exports.retrieveMessages = functions.https.onCall((data, context) => {
 
 
     });
+//handle a request
+exports.handleRequest = functions.https.onCall((data, context) => {
 
-exports.handleWriterRequest = functions.https.onCall((data, context) => {
-
-    const response = data.response;
-    const req_id = data.req_id;
+    const response = data.result;
+    const req_id = data.request_id;
     const requester_id = data.requester_id;
     const user_id = data.user_id;
-    console.log("L:/", "CALLED_WRITER_HANDLE_REQUEST", context.auth.uid);
+    console.log("L:/", "CALLED_HANDLE_REQUEST", context.auth.uid);
     if (response === "ACCEPT_REQ") {
-            //add Writer to Editors' permissions, delete request from user folders and request folder.
+        //add user to each others profile
+        var requester_ref = admin.database().ref("/Users/" + requester_id + "/Permissions/");
+        //writer to editor
+        var user_ref = admin.database().ref("/Users/" + user_id + "/Permissions/");
+        //using true for placeholder value. just need the ids in the folder to know that user has permission
+        requester_ref.child(user_id).set(true);
+        user_ref.child(requester_id).set(true);
+
+        const message_id = requester_id.substring(0, 5) + user_id.substring(0, 5);
+
+        //create messaging services
+
+        var message_ref_user = admin.database().ref("Users/" + user_id +"/Messages/");
+        var message_ref_requester = admin.database().ref("/Users/" + requester_id + "/Messages/");
+        message_ref_user.child(requester_id).set(message_id);
+        message_ref_requester.child(user_id).set(message_id);
+
+        //remove refs to request
+        var requester_req_ref = admin.database().ref("/Users/" + requester_id + "/RequestsSent/" + user_id)
+        .remove();
+        var user_req_ref = admin.database().ref("/Users/" + user_id + "/RequestsReceived/" + requester_id)
+                                          .remove();
+
+        //update status
+        var request_ref = admin.database().ref("/Requests/" + req_id)
+        request_ref.update({status : "STATUS_ACCEPTED"});
 
     } else if (response === "REJECT_REQ") {
-           //change request status, keep request in folder for denial
+           var update_req_ref = admin.database().ref("/Requests/" + req_id);
+           update_req_ref.update({status : "STATUS_DENIED"});
+
+    } else {
+        console.log("there was error", "error", "error!");
     }
 
 });
 
-exports.handleEditorRequest = functions.https.onCall((data, context) => {
-
-    const response = data.response;
-    const req_id = data.req_id;
-    const requester_id = data.requester_id;
-    const user_id = data.user_id;
-    console.log("L:/", "CALLED_EDITOR_HANDLE_REQUEST", context.auth.uid);
-    if (response === "ACCEPT_REQ") {
-            //add Writer to Editors' permissions, delete request from user folders and request folder.
-
-    } else if (response === "REJECT_REQ") {
-           //change request status, keep request in folder for denial
-    }
-
-});
 
 exports.grabUserRequests = functions.https.onCall((data, context) => {
 
@@ -403,7 +444,7 @@ exports.grabUserRequests = functions.https.onCall((data, context) => {
     var user_ids = [];
     var request_ids = [];
     console.log("L:/", "CALLED_GRAB_USER_REQUESTS", context.auth.uid);
-    const fb = admin.database().ref("/Users/" + user_id + "/Requests/");
+    const fb = admin.database().ref("/Users/" + user_id + "/RequestsReceived/");
     var request_data = fb.once('value').then(dataSnapshot => {
         dataSnapshot.forEach(ds => {
               var user_id = ds.key;
@@ -452,20 +493,33 @@ exports.checkRequestStatus = functions.https.onCall((data, context) => {
     console.log("L:/", "CALLED_CHECK_REQUEST", context.auth.uid);
     const fb = admin.database().ref("/Requests/" + request_id + "/status/");
     var request_data = fb.once('value').then(dataSnapshot => {
-        return {status: dataSnapshot};
+        return {status: dataSnapshot.val()};
     });
 
 });
 
 exports.getRequestId = functions.https.onCall((data, context) => {
 
-    const request_id = data.request_id;
-    console.log("L:/", "CALLED_CHECK_REQUEST", context.auth.uid);
-    const fb = admin.database().ref("/Requests/" + request_id + "/status/");
+    const user_id = data.user_id;
+    const requestee_id = data.requestee_id;
+    console.log("L:/", "CALLED_GET_REQUEST_ID", context.auth.uid);
+    const fb = admin.database().ref("/Users/" + user_id + "/RequestsReceived/" + requestee_id);
     var request_data = fb.once('value').then(dataSnapshot => {
-        return {status: dataSnapshot};
+        return {request_id: dataSnapshot.val()};
     });
 
 });
+exports.pushSuggestion = functions.https.onCall((data, context) => {
+    const pub_id = data.pub_id;
+    const comments = data.comments;
+    const author_name = data.author;
+    const idea = data.idea;
+    console.log("L:/", "CALLED_PUSH_SUGG", context.auth.uid);
+    const fb = admin.database().ref("/Users/" + pub_id + "/Suggestions/");
+    const suggestion = {name : author_name,
+                    idea : idea,
+                    comments : comments};
+    fb.push(suggestion);
 
+});
 
