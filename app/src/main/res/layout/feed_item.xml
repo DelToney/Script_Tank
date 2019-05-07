@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="0dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp">
+
+        <ImageView
+            android:id="@+id/feedItemPicture"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:padding="2dp"
+            app:srcCompat="@drawable/common_google_signin_btn_icon_dark_focused" />
+
+        <TextView
+            android:id="@+id/feedItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="11dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="4dp"
+            android:layout_toEndOf="@+id/feedItemPicture"
+            android:layout_toRightOf="@+id/feedItemPicture"
+            android:text="@string/feed_item"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/feedItemDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/feedItem"
+            android:layout_alignLeft="@+id/feedItem"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/feed_item_desc"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

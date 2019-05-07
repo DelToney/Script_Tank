@@ -15,12 +15,11 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewAdapterVie
     public onItemClickListener mListener;
 
     public interface onItemClickListener {
-        void OnItemClick(int position);
-
+        void onItemClick(int position);
     }
 
     public void setOnItemClickListener(onItemClickListener listener) {
-
+        mListener = listener;
     }
 
 
@@ -34,11 +33,23 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewAdapterVie
         public TextView mTextView1;
         public TextView mTextView2;
 
-        public ViewAdapterViewHolder(@NonNull View itemView) {
+        public ViewAdapterViewHolder(@NonNull View itemView, final onItemClickListener listener) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.imageView);
-            mTextView1 = itemView.findViewById(R.id.testItem);
-            mTextView2 = itemView.findViewById(R.id.testItemDescr);
+            mImageView = itemView.findViewById(R.id.editorPicture);
+            mTextView1 = itemView.findViewById(R.id.line1text);
+            mTextView2 = itemView.findViewById(R.id.line2text);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -52,7 +63,7 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewAdapterVie
     @Override
     public ViewAdapterViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.placeholder_item, parent, false);
-        ViewAdapterViewHolder vavh = new ViewAdapterViewHolder(v);
+        ViewAdapterViewHolder vavh = new ViewAdapterViewHolder(v, mListener);
         return vavh;
     }
     //goes through each element and makes a card for each
