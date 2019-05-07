@@ -27,7 +27,7 @@ public class PublisherIdeaList extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<String> ideaTitles;
     private ArrayList<String> writers;
-    private SearchResultAdapter adapter;
+    private ViewAdapter adapter;
     private ArrayList<TestItem> testItems;
     private FirebaseFunctions functions;
 
@@ -39,9 +39,14 @@ public class PublisherIdeaList extends AppCompatActivity {
         m_User = myApp.getM_User();
         functions = FirebaseFunctions.getInstance();
         toolbar = findViewById(R.id.toolbar);
+        recyclerView = findViewById(R.id.list);
+        testItems = new ArrayList<>();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         setSupportActionBar(toolbar);
+
+        adapter = new ViewAdapter(testItems);
+        recyclerView.setAdapter(adapter);
 
         getPublisherIdeas(m_User.getKey()).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>(){
             public void onComplete(@NonNull Task<HashMap<String, Object>> task){

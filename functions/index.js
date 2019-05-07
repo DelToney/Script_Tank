@@ -257,25 +257,25 @@ exports.searchForIdeas = functions.https.onCall((data, context) => {
       });
     });
 
-    console.log("L:/", "CALLED_CREATE_REQUEST", context.auth.uid);
-    const user_key = data.user_key;
-    const recv_key = data.receiver_key;
-    const inital_status = "STATUS_PENDING";
-    const request_obj = {uid: user_key, rid: recv_key, status: inital_status};
-    return admin.database().ref("/Requests/").push(request_obj).then((push_request) => {
-
-        const req_key = push_request.key;
-        var recv_deliverable = {};
-        var user_deliverable = {};
-        recv_deliverable[user_key] = req_key;
-        user_deliverable[recv_key] = req_key;
-        const user_update = admin.database().ref("/Users/" + user_key + "/Requests/").update(
-        user_deliverable);
-        const recv_update = admin.database().ref("/Users/" + recv_key + "/Requests/").update(
-        recv_deliverable);
-        return Promise.all([user_update, recv_update]);
-        });
-    });
+//    console.log("L:/", "CALLED_CREATE_REQUEST", context.auth.uid);
+//    const user_key = data.user_key;
+//    const recv_key = data.receiver_key;
+//    const inital_status = "STATUS_PENDING";
+//    const request_obj = {uid: user_key, rid: recv_key, status: inital_status};
+//    return admin.database().ref("/Requests/").push(request_obj).then((push_request) => {
+//
+//        const req_key = push_request.key;
+//        var recv_deliverable = {};
+//        var user_deliverable = {};
+//        recv_deliverable[user_key] = req_key;
+//        user_deliverable[recv_key] = req_key;
+//        const user_update = admin.database().ref("/Users/" + user_key + "/Requests/").update(
+//        user_deliverable);
+//        const recv_update = admin.database().ref("/Users/" + recv_key + "/Requests/").update(
+//        recv_deliverable);
+//        return Promise.all([user_update, recv_update]);
+//        });
+//    });
 
 exports.grabUserFriends = functions.https.onCall((data, context) => {
 
@@ -346,7 +346,7 @@ exports.getPublisherIdeas = functions.https.onCall((data, context) => {
             ds.forEach(ds1 =>{
                 var idea = ds1.child("IdeaName").val();
                 var writer = ds1.child("WriterName").val();
-                var userID = dls.child.("Publisher").val();
+                var userID = ds1.child("Publisher").val();
                 if (query === userID) {
                     ideas.push(idea);
                     writers.push(writer);

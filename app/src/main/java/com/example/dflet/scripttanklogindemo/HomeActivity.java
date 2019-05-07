@@ -64,8 +64,8 @@ public class HomeActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
         m_Layout = findViewById(R.id.drawer_layout);
         m_NavigationView = findViewById(R.id.nav_view);
-        searchButton = findViewById(R.id.searchButton);
-        publisherIdeaListButton = findViewById(R.id.listIdeaButton);
+        searchButton = findViewById(R.id.searchButton); //Temporary
+        publisherIdeaListButton = findViewById(R.id.listIdeaButton); //Temporary
 //        editorBoy = findViewById(R.id.editorTest);
         delPic = findViewById(R.id.delPic);
         setNavMenu();
@@ -133,14 +133,17 @@ public class HomeActivity extends AppCompatActivity {
                 logOut();
             }
         });
-        checkSettings();
+        //checkSettings();
 
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
 
+        //This stuff is temporary for publisher testing
+        searchButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                startActivity(new Intent(HomeActivity.this, writer_search.class));
+            }
+        });
 
         publisherIdeaListButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -148,6 +151,12 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(HomeActivity.this, PublisherIdeaList.class));
             }
         });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -170,7 +179,7 @@ public class HomeActivity extends AppCompatActivity {
             editorBoy.setText("Del is Idiot");
             getDelImage();
         } else {
-            editorBoy.setText("");
+            //editorBoy.setText("");
             delPic.setImageResource(android.R.color.transparent);
         }
     }
