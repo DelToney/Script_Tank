@@ -82,7 +82,7 @@ public class UploadIdeas extends AppCompatActivity {
         String pageLength = mPageLengthEditText.getText().toString();
         String ideaWorth = mIdeaWorthEditText.getText().toString();
         String alias = mAliasEditText.getText().toString();
-        myIdea = new Idea(name, ideaAbstract, ideaDescription, genre, pageLength, alias, m_User.key, ideaWorth);
+        myIdea = new Idea(name, ideaAbstract, ideaDescription, genre, pageLength, ((alias=="")?m_User.name:alias), m_User.key, ideaWorth);
     }
 
     private void UploadIdea() {

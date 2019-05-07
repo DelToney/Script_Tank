@@ -51,7 +51,7 @@ public class ViewUploadsActivity extends AppCompatActivity {
     protected ScriptTankApplication myApp;
     private static User m_User;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private ViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<TestItem> testItems = new ArrayList<>();
 
@@ -93,6 +93,17 @@ public class ViewUploadsActivity extends AppCompatActivity {
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        //on idea click, open its profile
+        mAdapter.setOnItemClickListener(new ViewAdapter.onItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+            myApp.setmCurrentIdeaKey(testItems.get(position).getText2());
+            Intent intent = new Intent(ViewUploadsActivity.this,
+                    IdeaProfile.class);
+            startActivity(intent);
+            }
+        });
 
         getUserIdeas(userKey).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
             @Override

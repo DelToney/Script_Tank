@@ -232,6 +232,26 @@ exports.getUserIdeas = functions.https.onCall((data, context) => {
 
 });
 
+exports.getIdeaByID = functions.https.onCall((data, context) => {
+
+
+    console.log("L:/", "CALLED_GET_IDEA_BY_ID", context.auth.uid);
+    const ideaKey = data.ideaKey;
+    let idea;
+    const fb = admin.database().ref("/Ideas/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+            ds.forEach(ds1 => {
+                if (ds1.key === ideaKey) {
+                    idea = ds1.val();
+                }
+            });
+        });
+        console.log(idea);
+        return idea;
+    });
+});
+
 exports.searchForIdeas = functions.https.onCall((data, context) => {
 
     const query = data.query;

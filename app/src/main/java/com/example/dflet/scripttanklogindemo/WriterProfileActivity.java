@@ -32,7 +32,7 @@ public class WriterProfileActivity extends AppCompatActivity {
         m_User = myApp.getM_User();
         myApp.setCurrActivity(this);
 
-        profiledUser = ((m_User == myApp.getM_User())?m_User:null);//when adding parcellable user id, itll go into null
+        profiledUser = ((m_User == myApp.getmCurrentUser())?m_User:myApp.getmCurrentUser());//when adding parcellable user id, itll go into null
 
 
         mWriterName = findViewById(R.id.authorTitle);
@@ -40,7 +40,7 @@ public class WriterProfileActivity extends AppCompatActivity {
         mDetails = findViewById(R.id.authorDetails);
 
 
-        GetUserInfo(m_User.key).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
+        GetUserInfo(profiledUser.key).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
                                                           @Override
                                                           public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
                                                               System.out.println(task.getResult());
