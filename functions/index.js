@@ -215,3 +215,12 @@ exports.searchForIdeas = functions.https.onCall((data, context) => {
                         Writers: writers};
       });
     });
+
+exports.getPublisherIdeas = functions.https.onCall((data, context) => {
+    const query = data.query;
+    var ideas = [];
+    var writers = [];
+    console.log("L:/", "CALLED_GET_PUBLISHER_IDEAS", query);
+    const fb = admin.database().ref("/Ideas/");
+
+});
