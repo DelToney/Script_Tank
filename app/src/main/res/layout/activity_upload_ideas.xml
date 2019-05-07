@@ -7,70 +7,6 @@
     tools:context=".UploadIdeas"
     android:background="@color/cardview_dark_background">
 
-    <Button
-        android:id="@+id/chooseFileButton2"
-        android:layout_width="110dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginLeft="48dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1"
-        android:background="#303030"
-        android:text="@string/choose_file"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.955"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aliasEdit"
-        app:layout_constraintVertical_bias="0.011" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="114dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="#303030"
-        android:text="@string/upload_idea"
-        android:textColor="#FFFFFF"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <EditText
-        android:id="@+id/aliasEdit"
-        android:layout_width="0dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="@string/idea_writer_alias"
-        android:textColor="@android:color/white"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ideaWorthEdit"
-        app:layout_constraintVertical_bias="0.0" />
-
     <EditText
         android:id="@+id/ideaNameEdit"
         android:layout_width="0dp"
@@ -82,9 +18,10 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
+        android:hint="@string/idea_name"
         android:inputType="textPersonName"
-        android:text="@string/idea_name"
         android:textColor="@android:color/white"
+        android:textColorHint="@color/colorTextDefault"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,30 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.031" />
-
-    <EditText
-        android:id="@+id/IdeaDescriptionEdit"
-        android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="@string/idea_description"
-        android:inputType="textMultiLine"
-        android:textColor="@color/colorTextDefault"
-        android:textColorHint="@color/colorTextDefault"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ideaAbstractEdit"
-        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/ideaAbstractEdit"
@@ -142,6 +55,30 @@
         app:layout_constraintVertical_bias="0.003" />
 
     <EditText
+        android:id="@+id/IdeaDescriptionEdit"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="@string/idea_description"
+        android:inputType="textMultiLine"
+        android:textColor="@color/colorTextDefault"
+        android:textColorHint="@color/colorTextDefault"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ideaAbstractEdit"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
         android:id="@+id/ideaGenreEdit"
         android:layout_width="208dp"
         android:layout_height="wrap_content"
@@ -151,7 +88,7 @@
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/idea_genre"
+        android:hint="@string/idea_genre"
         android:textColor="@color/colorTextDefault"
         android:textColorHint="@color/colorTextDefault"
         android:textSize="22sp"
@@ -182,7 +119,7 @@
         app:layout_constraintStart_toEndOf="@+id/ideaGenreEdit"
         app:layout_constraintTop_toTopOf="@+id/ideaGenreEdit"
         app:layout_constraintVertical_bias="1.0"
-        tools:text="@string/idea_page_length" />
+        android:hint="@string/idea_page_length" />
 
     <EditText
         android:id="@+id/ideaWorthEdit"
@@ -205,10 +142,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/IdeaDescriptionEdit"
         app:layout_constraintVertical_bias="0.02"
-        tools:text="@string/idea_worth" />
+        android:hint="@string/idea_worth" />
+
+    <EditText
+        android:id="@+id/aliasEdit"
+        android:layout_width="0dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:hint="@string/idea_writer_alias"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/white"
+        android:textColorHint="@color/colorTextDefault"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ideaWorthEdit"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/fileTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -227,6 +187,48 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/chooseFileButton2"
         app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/chooseFileButton2"
+        android:layout_width="110dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        android:background="#303030"
+        android:text="@string/choose_file"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.955"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/aliasEdit"
+        app:layout_constraintVertical_bias="0.011" />
+
+    <Button
+        android:id="@+id/uploadIdeaButton"
+        android:layout_width="114dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#303030"
+        android:text="@string/upload_idea"
+        android:textColor="#FFFFFF"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </android.support.constraint.ConstraintLayout>

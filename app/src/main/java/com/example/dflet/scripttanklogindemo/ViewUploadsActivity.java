@@ -62,6 +62,9 @@ public class ViewUploadsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_uploads);
         myApp = (ScriptTankApplication) this.getApplicationContext();
         m_User = myApp.getM_User();
+        myApp.setCurrActivity(this);
+
+        String userKey = ((myApp.getmCurrentUser()==null)?m_User.key: myApp.getmCurrentUser().key);
 
 
 //        Toolbar toolbar = findViewById(R.id.toolbar);
@@ -91,7 +94,7 @@ public class ViewUploadsActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        getUserIdeas().addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
+        getUserIdeas(userKey).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
             @Override
             public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
                 if (task.isSuccessful()) {
@@ -113,11 +116,19 @@ public class ViewUploadsActivity extends AppCompatActivity {
 
     }
 
-    private Task<HashMap<String, Object>> getUserIdeas() {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (myApp.getmCurrentUser()!= null){
+            myApp.setmCurrentUser(null);
+        }
+    }
+
+    private Task<HashMap<String, Object>> getUserIdeas(Object key) {
         Map<String, Object> data = new HashMap<>();
         //data.put("push", true); //always include this, please. It is unknown what happens,
         // if it ain't there.
-        data.put("userID", m_User.key);
+        data.put("userID", key);
 
         FirebaseFunctions ff = FirebaseFunctions.getInstance();
 
