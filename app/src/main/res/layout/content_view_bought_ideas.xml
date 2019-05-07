@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewUploadsActivity">
+    tools:context=".EditorRequestList"
+    tools:showIn="@layout/activity_view_bought_ideas">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -12,18 +13,16 @@
 
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/uploadedRecyclerView"
+            android:id="@+id/boughtIdeasRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="0dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/cardview_dark_background"
             android:padding="4dp"
             android:scrollbars="vertical"
             tools:layout_editor_absoluteX="0dp"
-            tools:listitem="@layout/placeholder_item" />
+            tools:listitem="@layout/bought_idea_item" />
 
 
     </RelativeLayout>
-
-
-</android.support.v4.widget.DrawerLayout>
+</RelativeLayout>

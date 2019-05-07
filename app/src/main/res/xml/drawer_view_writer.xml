@@ -2,13 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="none">
         <item
-        android:id="@+id/UploadFiles"
-        android:title="@string/upload_files" />
-        
+        android:id="@+id/ViewProfile"
+        android:title="@string/view_profile" />
+
         <item
-        android:id="@+id/viewUploads"
-        android:title="View Uploads" />
-        
+        android:id="@+id/UploadIdea"
+        android:title="@string/upload_idea" />
+
+        <item
+        android:id="@+id/ViewEditorRequests"
+        android:title="@string/view_editor_requests" />
+
         <item
         android:id="@+id/ViewMyFiles"
         android:title="@string/view_files" />

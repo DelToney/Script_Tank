@@ -181,6 +181,7 @@ exports.loadUserProfileByEmail = functions.https.onCall((data, context) => {
 exports.loadUserProfileByKey = functions.https.onCall((data, context) => {
 
     console.log("L:/", "CALLED_LOAD_USER_PROFILE_KEY", context.auth.uid);
+    console.log(data.key);
     const key = data.key;
     const fb = admin.database().ref("/Users/" + key);
     return fb.once('value').then(dataSnapshot => {
@@ -231,6 +232,26 @@ exports.getUserIdeas = functions.https.onCall((data, context) => {
 
 });
 
+exports.getIdeaByID = functions.https.onCall((data, context) => {
+
+
+    console.log("L:/", "CALLED_GET_IDEA_BY_ID", context.auth.uid);
+    const ideaKey = data.ideaKey;
+    let idea;
+    const fb = admin.database().ref("/Ideas/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+            ds.forEach(ds1 => {
+                if (ds1.key === ideaKey) {
+                    idea = ds1.val();
+                }
+            });
+        });
+        console.log(idea);
+        return idea;
+    });
+});
+
 exports.searchForIdeas = functions.https.onCall((data, context) => {
 
     const query = data.query;
@@ -257,25 +278,25 @@ exports.searchForIdeas = functions.https.onCall((data, context) => {
       });
     });
 
-    console.log("L:/", "CALLED_CREATE_REQUEST", context.auth.uid);
-    const user_key = data.user_key;
-    const recv_key = data.receiver_key;
-    const inital_status = "STATUS_PENDING";
-    const request_obj = {uid: user_key, rid: recv_key, status: inital_status};
-    return admin.database().ref("/Requests/").push(request_obj).then((push_request) => {
+    // console.log("L:/", "CALLED_CREATE_REQUEST", context.auth.uid);
+    // const user_key = data.user_key;
+    // const recv_key = data.receiver_key;
+    // const inital_status = "STATUS_PENDING";
+    // const request_obj = {uid: user_key, rid: recv_key, status: inital_status};
+    // return admin.database().ref("/Requests/").push(request_obj).then((push_request) => {
 
-        const req_key = push_request.key;
-        var recv_deliverable = {};
-        var user_deliverable = {};
-        recv_deliverable[user_key] = req_key;
-        user_deliverable[recv_key] = req_key;
-        const user_update = admin.database().ref("/Users/" + user_key + "/Requests/").update(
-        user_deliverable);
-        const recv_update = admin.database().ref("/Users/" + recv_key + "/Requests/").update(
-        recv_deliverable);
-        return Promise.all([user_update, recv_update]);
-        });
-    });
+    //     const req_key = push_request.key;
+    //     var recv_deliverable = {};
+    //     var user_deliverable = {};
+    //     recv_deliverable[user_key] = req_key;
+    //     user_deliverable[recv_key] = req_key;
+    //     const user_update = admin.database().ref("/Users/" + user_key + "/Requests/").update(
+    //     user_deliverable);
+    //     const recv_update = admin.database().ref("/Users/" + recv_key + "/Requests/").update(
+    //     recv_deliverable);
+    //     return Promise.all([user_update, recv_update]);
+    //     });
+    // });
 
 exports.grabUserFriends = functions.https.onCall((data, context) => {
 

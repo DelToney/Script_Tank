@@ -68,58 +68,66 @@ public class HomeActivity extends AppCompatActivity {
         m_NavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.ViewMyFiles:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        Intent intent = new Intent(HomeActivity.this,
-                                ViewUploadsActivity.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
-                    case R.id.IdeasSearch:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        intent = new Intent(HomeActivity.this,
-                               writer_search.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
-                    case R.id.viewUploads:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        intent = new Intent(HomeActivity.this,
-                                ViewUploadsActivity.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
-                    case R.id.contactWriters:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        intent = new Intent(HomeActivity.this,
-                                EditorListWritersActivity.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
-                    case R.id.sendMessageDrawer:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        intent = new Intent(HomeActivity.this,
-                                ChatListActivity.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
-                    case R.id.settings:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        intent = new Intent(HomeActivity.this,
-                                SettingsActivity.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
-                    default:
-                        return true;
-                }
+            switch (menuItem.getItemId()) {
+                case R.id.ViewMyFiles:
+                    menuItem.setChecked(true);
+                    m_Layout.closeDrawers();
+                    Intent intent = new Intent(HomeActivity.this,
+                            ViewUploadsActivity.class);
+                    menuItem.setChecked(false);
+                    startActivity(intent);
+                    return true;
+                case R.id.IdeasSearch:
+                    menuItem.setChecked(true);
+                    m_Layout.closeDrawers();
+                    intent = new Intent(HomeActivity.this,
+                           writer_search.class);
+                    menuItem.setChecked(false);
+                    startActivity(intent);
+                    return true;
+                case R.id.ViewProfile:
+                    menuItem.setChecked(true);
+                    m_Layout.closeDrawers();
+                    intent = new Intent(HomeActivity.this,
+                           WriterProfileActivity.class);
+                    menuItem.setChecked(false);
+                    startActivity(intent);
+                    return true;
+                case R.id.UploadIdea:
+                    menuItem.setChecked(true);
+                    m_Layout.closeDrawers();
+                    intent = new Intent(HomeActivity.this,
+                           UploadIdeas.class);
+                    menuItem.setChecked(false);
+                    startActivity(intent);
+                    return true;
+                case R.id.contactWriters:
+                    menuItem.setChecked(true);
+                    m_Layout.closeDrawers();
+                    intent = new Intent(HomeActivity.this,
+                            EditorListWritersActivity.class);
+                    menuItem.setChecked(false);
+                    startActivity(intent);
+                    return true;
+                case R.id.sendMessageDrawer:
+                    menuItem.setChecked(true);
+                    m_Layout.closeDrawers();
+                    intent = new Intent(HomeActivity.this,
+                            ChatListActivity.class);
+                    menuItem.setChecked(false);
+                    startActivity(intent);
+                    return true;
+                case R.id.settings:
+                    menuItem.setChecked(true);
+                    m_Layout.closeDrawers();
+                    intent = new Intent(HomeActivity.this,
+                            SettingsActivity.class);
+                    menuItem.setChecked(false);
+                    startActivity(intent);
+                    return true;
+                default:
+                    return true;
+            }
             }
         });
         final Button button = findViewById(R.id.logOutHomeAct);
@@ -204,7 +212,7 @@ public class HomeActivity extends AppCompatActivity {
             return;
         }
 
-
+        System.out.println(m_User.fb_id);
         switch(m_User.type) {
             case "Writer":
                 m_Editor = (Editor)m_User;
