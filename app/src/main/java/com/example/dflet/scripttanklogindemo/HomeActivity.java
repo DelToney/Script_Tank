@@ -85,6 +85,14 @@ public class HomeActivity extends AppCompatActivity {
                     menuItem.setChecked(false);
                     startActivity(intent);
                     return true;
+                case R.id.UploadIdea:
+                    menuItem.setChecked(true);
+                    m_Layout.closeDrawers();
+                    intent = new Intent(HomeActivity.this,
+                           UploadIdeas.class);
+                    menuItem.setChecked(false);
+                    startActivity(intent);
+                    return true;
                 case R.id.contactWriters:
                     menuItem.setChecked(true);
                     m_Layout.closeDrawers();
@@ -196,7 +204,7 @@ public class HomeActivity extends AppCompatActivity {
             return;
         }
 
-
+        System.out.println(m_User.fb_id);
         switch(m_User.type) {
             case "Writer":
                 m_Editor = (Editor)m_User;
