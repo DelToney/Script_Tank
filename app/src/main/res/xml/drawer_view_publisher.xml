@@ -2,7 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/ViewExtracts"
-            android:title="@string/view_extracts" />
+            android:id="@+id/IdeasSearch"
+            android:title="@string/search_drawer" />
+        <item
+            android:id="@+id/settings"
+            android:title="@string/title_activity_settings" />
+
     </group>
 </menu>

@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.lang.reflect.Array;
 
@@ -34,6 +35,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     private EditText phoneNumberEditText, confirmPwdEditText, pwdOriginalEditText, emailEditText, nameEditText;
     private String phone, email, name, type;
     private FirebaseAuth fbAuth;
+    protected ScriptTankApplication myApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,19 +74,33 @@ public class CreateAccountActivity extends AppCompatActivity {
         //user object to users database
         if (code.equals("Success")) {
             FirebaseInstanceId fb_id = FirebaseInstanceId.getInstance();
-            String id = fb_id.getId();
-            String newKey = fbAuth.getCurrentUser().getUid();
-            User userProfile = new User(email, phone, name, type, id);
-            Intent intent = new Intent(this, DatabaseWriteService.class);
-            intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
-            intent.putExtra("DO_NOT_WRITE_TO_DB", false);
-            startService(intent);
-            intent = new Intent(this, HomeActivity.class);
-            intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
-            startActivity(intent);
-            finish(); //must put this in to kill activity off stack, so user cannot go back.
+            fb_id.getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                @Override
+                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                    if (task.isSuccessful()) {
+                        User userProfile = createProfile(email, phone, name, type, task.getResult().getId(), task.getResult().getToken());
+
+                        userProfile.setToken(task.getResult().getToken());
+                        myApp = (ScriptTankApplication)CreateAccountActivity.this.getApplicationContext();
+                        myApp.setM_User(userProfile);
+                        Intent intent = new Intent(CreateAccountActivity.this, DatabaseWriteService.class);
+                       //intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
+
+                        intent.putExtra("PROCESS", "ACCOUNT_CREATION");
+                        startService(intent);
+                        intent = new Intent(CreateAccountActivity.this, HomeActivity.class);
+                       // intent.putExtra(getString(R.string.user_profile_intent), (Parcelable)userProfile);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
+                        startActivity(intent); //must put this in to kill activity off stack, so user cannot go back.
+                    }
+                }
+            });
+
+
+
+
+
         } else {
-            System.out.println(code);
             switch (code) {
                 case "ERROR_INVALID_EMAIL":
                     emailEditText.setError(getString(R.string.error_invalid_email));
@@ -101,6 +117,18 @@ public class CreateAccountActivity extends AppCompatActivity {
                 default:
                     return;
             }
+        }
+    }
+
+    private User createProfile(String email, String phone, String name, String type, String id, String token) {
+        switch (type) {
+            case "Editor":
+                String [] data = {"NOT", "An", "Editor", "DUDE"};
+                User newProfile = new Editor(email, phone, name, type, id, data);
+                newProfile.setToken(token);
+                return newProfile;
+            default:
+                return new Editor(email, phone, name, type, id, new String[4]);
         }
     }
 
