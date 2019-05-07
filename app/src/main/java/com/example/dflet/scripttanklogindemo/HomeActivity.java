@@ -66,7 +66,7 @@ public class HomeActivity extends AppCompatActivity {
         m_NavigationView = findViewById(R.id.nav_view);
         searchButton = findViewById(R.id.searchButton);
         publisherIdeaListButton = findViewById(R.id.listIdeaButton);
-        editorBoy = findViewById(R.id.editorTest);
+//        editorBoy = findViewById(R.id.editorTest);
         delPic = findViewById(R.id.delPic);
         setNavMenu();
         m_NavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
