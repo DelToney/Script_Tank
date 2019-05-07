@@ -22,11 +22,8 @@
         <activity android:name=".IdeaProfile" />
         <activity android:name=".writer_search" />
 
-
-        android:theme="@style/AppTheme">
         <activity android:name=".SettingsActivity"
             android:theme="@style/AppTheme"></activity>
-        <activity android:name=".writer_search" />
         <activity android:name=".ChatListActivity" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".ProfileActivity" />
