@@ -156,6 +156,8 @@
     </string>
 
     <string name="title_activity_settings">Settings</string>
+    <string name="publisher_purchased_ideas">View Purchased Ideas</string>
+    <string name="welcome">Welconme to the ScriptTank Demo</string>
 
 
 </resources>

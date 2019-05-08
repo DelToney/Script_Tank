@@ -69,6 +69,8 @@ public class HomeActivity extends AppCompatActivity {
 //        editorBoy = findViewById(R.id.editorTest);
         delPic = findViewById(R.id.delPic);
         setNavMenu();
+
+        // Side menu options
         m_NavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -121,11 +123,20 @@ public class HomeActivity extends AppCompatActivity {
                         menuItem.setChecked(false);
                         startActivity(intent);
                         return true;
+                    case R.id.PublisherIdeas:
+                        menuItem.setChecked(true);
+                        m_Layout.closeDrawers();
+                        intent = new Intent(HomeActivity.this,
+                                PublisherIdeaList.class);
+                        menuItem.setChecked(false);
+                        startActivity(intent);
+                        return true;
                     default:
                         return true;
                 }
             }
         });
+
         final Button button = findViewById(R.id.logOutHomeAct);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,6 +162,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(HomeActivity.this, PublisherIdeaList.class));
             }
         });
+        //End of temporary stuff
 
     }
 
