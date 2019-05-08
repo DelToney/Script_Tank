@@ -1,5 +1,6 @@
 package com.example.dflet.scripttanklogindemo;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -76,6 +77,18 @@ public class PublisherIdeaList extends AppCompatActivity {
                 }
             }
 
+        });
+
+
+        //on idea click, open its profile
+        adapter.setOnItemClickListener(new ViewAdapter.onItemClickListener() {
+            @Override
+            public void OnItemClick(int position) {
+                myApp.setmCurrentIdeaKey(testItems.get(position).getText2());
+                Intent intent = new Intent(PublisherIdeaList.this,
+                        IdeaProfile.class);
+                startActivity(intent);
+            }
         });
     }
 
