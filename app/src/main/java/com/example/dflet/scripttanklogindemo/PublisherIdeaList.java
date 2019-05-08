@@ -36,7 +36,7 @@ public class PublisherIdeaList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publisher_idea_list);
-        myApp = (ScriptTankApplication)this.getApplicationContext(); //these three lines need to be in every
+        myApp = (ScriptTankApplication) this.getApplicationContext(); //these three lines need to be in every
         m_User = myApp.getM_User();
         functions = FirebaseFunctions.getInstance();
         toolbar = findViewById(R.id.toolbar);
@@ -48,11 +48,24 @@ public class PublisherIdeaList extends AppCompatActivity {
 
         adapter = new ViewAdapter(testItems);
         recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
 
-        getPublisherIdeas(m_User.getKey()).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>(){
-            public void onComplete(@NonNull Task<HashMap<String, Object>> task){
+
+        //on idea click, open its profile
+        adapter.setOnItemClickListener(new ViewAdapter.onItemClickListener() {
+            @Override
+            public void OnItemClick(int position) {
+                myApp.setmCurrentIdeaKey(testItems.get(position).getText2());
+                Intent intent = new Intent(PublisherIdeaList.this,
+                        IdeaProfile.class);
+                startActivity(intent);
+            }
+        });
+
+        getPublisherIdeas(m_User.getKey()).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
+            public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
                 // If the firebase function executes successfully
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     // Log 'success' in the Logcat
                     Log.d("Success", "Success");
                     // Set results to the result of the firebase function
@@ -62,8 +75,7 @@ public class PublisherIdeaList extends AppCompatActivity {
                     // Debug stuff
                     System.out.println(results.size());
                     System.out.println(results);
-                }
-                else {
+                } else {
                     // If the firebase fails
                     Exception e = task.getException();
                     if (e instanceof FirebaseFunctionsException) {
@@ -78,23 +90,11 @@ public class PublisherIdeaList extends AppCompatActivity {
             }
 
         });
-
-
-        //on idea click, open its profile
-        adapter.setOnItemClickListener(new ViewAdapter.onItemClickListener() {
-            @Override
-            public void OnItemClick(int position) {
-                myApp.setmCurrentIdeaKey(testItems.get(position).getText2());
-                Intent intent = new Intent(PublisherIdeaList.this,
-                        IdeaProfile.class);
-                startActivity(intent);
-            }
-        });
     }
 
 
     // Gets all bought Ideas
-    private Task<HashMap<String, Object>> getPublisherIdeas(String query){
+    private Task<HashMap<String, Object>> getPublisherIdeas(String query) {
         // Data put into function
         Map<String, Object> data = new HashMap<>();
         data.put("query", query);
@@ -112,13 +112,13 @@ public class PublisherIdeaList extends AppCompatActivity {
     }
 
     //Update List Adapter
-    private void updateListAdapter(HashMap<String, Object> results){
+    private void updateListAdapter(HashMap<String, Object> results) {
         // Arrays for different text in the RecyclerView entry
-        ideaTitles = (ArrayList<String>)results.get("Ideas");
-        writers = (ArrayList<String>)results.get("Writers");
+        ideaTitles = (ArrayList<String>) results.get("Ideas");
+        writers = (ArrayList<String>) results.get("Writers");
 
         // For each entry in ideaTitles
-        for(int i = 0; i < ideaTitles.size(); i++) {
+        for (int i = 0; i < ideaTitles.size(); i++) {
             // Add new search result
             testItems.add(new TestItem(R.drawable.ic_person_black_24dp, ideaTitles.get(i), writers.get(i)));
         }
@@ -126,11 +126,4 @@ public class PublisherIdeaList extends AppCompatActivity {
         // Notify the adapter that the data has changed, changing the RecyclerView entries
         adapter.notifyDataSetChanged();
     }
-
-
-
-//    m_User.fb_id
-//    Intent intent = new Intent(HomeActivity.this,
-//            ViewExtractsActivity.class);
-//    intent.putExtra(getString(R.string.user_profile_intent), (Parcelable) m_User);
 }

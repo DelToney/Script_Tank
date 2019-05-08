@@ -20,7 +20,7 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewAdapter.ViewAdapterVie
     }
 
     public void setOnItemClickListener(onItemClickListener listener) {
-
+        mListener = listener;
     }
 
 
