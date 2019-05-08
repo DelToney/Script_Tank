@@ -386,9 +386,30 @@ exports.retrieveMessages = functions.https.onCall((data, context) => {
             return {messages: messages};
         });
 
+ });
 
 
-
+exports.getPublisherIdeas = functions.https.onCall((data, context) => {
+    const query = data.query;
+    var ideas = [];
+    var writers = [];
+    var userID = [];
+    console.log("L:/", "CALLED_GET_PUBLISHER_IDEAS", query);
+    const fb = admin.database().ref("/Ideas/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+            ds.forEach(ds1 =>{
+                var idea = ds1.child("IdeaName").val();
+                var writer = ds1.child("WriterName").val();
+                var userID = ds1.child("Publisher").val();
+                if (query === userID) {
+                    ideas.push(idea);
+                    writers.push(writer);
+                }
+            });
+        });
+         return {Ideas: ideas,
+                 Writers: writers};
     });
 //handle a request
 exports.handleRequest = functions.https.onCall((data, context) => {

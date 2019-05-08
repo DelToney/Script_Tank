@@ -38,13 +38,13 @@
 
         <ImageView
             android:id="@+id/profilePicture"
-            android:layout_width="118dp"
+            android:layout_width="78dp"
             android:layout_height="match_parent"
             android:layout_alignEnd="@+id/ideaTitle"
             android:layout_alignRight="@+id/ideaTitle"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="7dp"
-            android:layout_marginRight="7dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp"
             android:layout_marginBottom="0dp"
             android:contentDescription="TODO"
             app:srcCompat="@drawable/ic_person_black_24dp" />
