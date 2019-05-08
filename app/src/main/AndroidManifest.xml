@@ -17,22 +17,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".publisher_profile"></activity>
+        <activity android:name=".WriterProfileActivity"></activity>
+        <activity android:name=".publisher_profile" />
         <activity android:name=".PublisherIdeaList" />
         <activity android:name=".IdeaProfile" />
         <activity android:name=".writer_search" />
-
-        <activity android:name=".SettingsActivity"
-            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/AppTheme" />
         <activity android:name=".ChatListActivity" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".ProfileActivity" />
-
-
         <activity
             android:name=".ViewUploadsActivity"
             android:label="@string/title_activity_view_uploads"
-            android:theme="@style/NoActionBar"></activity>
+            android:theme="@style/NoActionBar" />
 
         <service
             android:name=".MyFirebaseMessagingService"
@@ -49,9 +48,9 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".EditorListWritersActivity"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+        <activity
+            android:name=".EditorListWritersActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity android:name=".UploadFileActivity" />
         <activity android:name=".WelcomeActivity">
 
