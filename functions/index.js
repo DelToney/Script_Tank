@@ -523,3 +523,65 @@ exports.pushSuggestion = functions.https.onCall((data, context) => {
 
 });
 
+exports.getPublisherIdeas = functions.https.onCall((data, context) => {
+    const query = data.query;
+    var ideas = [];
+    var writers = [];
+    var userID = [];
+    console.log("L:/", "CALLED_GET_PUBLISHER_IDEAS", query);
+    const fb = admin.database().ref("/Ideas/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+            ds.forEach(ds1 =>{
+                var idea = ds1.child("IdeaName").val();
+                var writer = ds1.child("WriterName").val();
+                var userID = ds1.child("Publisher").val();
+                if (query === userID) {
+                    ideas.push(idea);
+                    writers.push(writer);
+                }
+            });
+        });
+         return {Ideas: ideas,
+                 Writers: writers};
+    });
+});
+
+exports.grabUsersFiles = functions.https.onCall((data, context) => {
+
+    var users = [];
+    var file_names = [];
+    var db_ids = [];
+    console.log("L:/", "CALLED_USERS_FILES_FUNCTION", context.auth.uid);
+    const fb = admin.database().ref("/Users/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+                 users.push(ds.child("name").val())
+                 file_names.push(ds.child("Files").val())
+                 db_ids.push(ds.key)
+        });
+        return {usernames: users,
+                    files: file_names,
+                    ids: db_ids};
+        });
+    });
+
+exports.getIdeaByID = functions.https.onCall((data, context) => {
+
+
+    console.log("L:/", "CALLED_GET_IDEA_BY_ID", context.auth.uid);
+    const ideaKey = data.ideaKey;
+    let idea;
+    const fb = admin.database().ref("/Ideas/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+            ds.forEach(ds1 => {
+                if (ds1.key === ideaKey) {
+                    idea = ds1.val();
+                }
+            });
+        });
+        console.log(idea);
+        return idea;
+    });
+});
