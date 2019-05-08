@@ -202,6 +202,7 @@ exports.loadUserProfileByEmail = functions.https.onCall((data, context) => {
 exports.loadUserProfileByKey = functions.https.onCall((data, context) => {
 
     console.log("L:/", "CALLED_LOAD_USER_PROFILE_KEY", context.auth.uid);
+    console.log(data.key);
     const key = data.key;
     const view_key = data.viewer_key;
     const fb = admin.database().ref("/Users/" + key);
@@ -271,6 +272,26 @@ exports.getUserIdeas = functions.https.onCall((data, context) => {
                 IdeaNames: ideas};
     });
 
+});
+
+exports.getIdeaByID = functions.https.onCall((data, context) => {
+
+
+    console.log("L:/", "CALLED_GET_IDEA_BY_ID", context.auth.uid);
+    const ideaKey = data.ideaKey;
+    let idea;
+    const fb = admin.database().ref("/Ideas/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+            ds.forEach(ds1 => {
+                if (ds1.key === ideaKey) {
+                    idea = ds1.val();
+                }
+            });
+        });
+        console.log(idea);
+        return idea;
+    });
 });
 
 exports.searchForIdeas = functions.https.onCall((data, context) => {

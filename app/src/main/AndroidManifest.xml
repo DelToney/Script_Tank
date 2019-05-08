@@ -27,6 +27,21 @@
         <activity
             android:name=".SettingsActivity"
             android:theme="@style/AppTheme" />
+        <activity android:name=".WriterProfileActivity"></activity>
+        <activity
+            android:name=".ViewBoughtIdeasActivity"
+            android:label="@string/title_activity_view_bought_ideas"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".IdeaProfile"/>
+        <activity
+            android:name=".EditorRequestList"
+            android:label="@string/title_activity_editor_request_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".UploadIdeas" />
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/AppTheme" />
         <activity android:name=".writer_search" />
         <activity
             android:name=".SettingsActivity"
@@ -57,6 +72,9 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
+        <activity
+            android:name=".EditorListWritersActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".EditorListWritersActivity"
             android:windowSoftInputMode="adjustPan"></activity>

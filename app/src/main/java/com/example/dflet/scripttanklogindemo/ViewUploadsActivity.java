@@ -1,5 +1,6 @@
 package com.example.dflet.scripttanklogindemo;
 
+import android.app.Application;
 import android.content.Intent;
 import android.database.Cursor;
 import android.icu.text.SymbolTable;
@@ -47,9 +48,10 @@ import java.util.Objects;
 
 public class ViewUploadsActivity extends AppCompatActivity {
 
+    protected ScriptTankApplication myApp;
     private static User m_User;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private ViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<TestItem> testItems = new ArrayList<>();
 
@@ -58,7 +60,11 @@ public class ViewUploadsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_uploads);
-        Intent recvIntent = getIntent();
+        myApp = (ScriptTankApplication) this.getApplicationContext();
+        m_User = myApp.getM_User();
+        myApp.setCurrActivity(this);
+
+        String userKey = ((myApp.getmCurrentUser()==null)?m_User.key: myApp.getmCurrentUser().key);
 
 
 //        Toolbar toolbar = findViewById(R.id.toolbar);
@@ -88,11 +94,22 @@ public class ViewUploadsActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        getUserIdeas().addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
+        //on idea click, open its profile
+        mAdapter.setOnItemClickListener(new ViewAdapter.onItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+            myApp.setmCurrentIdeaKey(testItems.get(position).getText2());
+            Intent intent = new Intent(ViewUploadsActivity.this,
+                    IdeaProfile.class);
+            startActivity(intent);
+            }
+        });
+
+        getUserIdeas(userKey).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
             @Override
             public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
                 if (task.isSuccessful()) {
-                    System.out.println("VIEW UPLOADS");
+                    System.out.println(m_User.key);
                     updateListAdapter(task.getResult());
                 } else {
                     Exception e = task.getException();
@@ -110,11 +127,19 @@ public class ViewUploadsActivity extends AppCompatActivity {
 
     }
 
-    private Task<HashMap<String, Object>> getUserIdeas() {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (myApp.getmCurrentUser()!= null){
+            myApp.setmCurrentUser(null);
+        }
+    }
+
+    private Task<HashMap<String, Object>> getUserIdeas(Object key) {
         Map<String, Object> data = new HashMap<>();
         //data.put("push", true); //always include this, please. It is unknown what happens,
         // if it ain't there.
-        data.put("userID", "-L_ikYpDClMCcqnUd6a3");
+        data.put("userID", key);
 
         FirebaseFunctions ff = FirebaseFunctions.getInstance();
 
