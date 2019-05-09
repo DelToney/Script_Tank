@@ -326,25 +326,25 @@ exports.searchForIdeas = functions.https.onCall((data, context) => {
       });
     });
 
-    // console.log("L:/", "CALLED_CREATE_REQUEST", context.auth.uid);
-    // const user_key = data.user_key;
-    // const recv_key = data.receiver_key;
-    // const inital_status = "STATUS_PENDING";
-    // const request_obj = {uid: user_key, rid: recv_key, status: inital_status};
-    // return admin.database().ref("/Requests/").push(request_obj).then((push_request) => {
+   /* console.log("L:/", "CALLED_CREATE_REQUEST", context.auth.uid);
+    const user_key = data.user_key;
+    const recv_key = data.receiver_key;
+    const inital_status = "STATUS_PENDING";
+    const request_obj = {uid: user_key, rid: recv_key, status: inital_status};
+    return admin.database().ref("/Requests/").push(request_obj).then((push_request) => {
 
-    //     const req_key = push_request.key;
-    //     var recv_deliverable = {};
-    //     var user_deliverable = {};
-    //     recv_deliverable[user_key] = req_key;
-    //     user_deliverable[recv_key] = req_key;
-    //     const user_update = admin.database().ref("/Users/" + user_key + "/Requests/").update(
-    //     user_deliverable);
-    //     const recv_update = admin.database().ref("/Users/" + recv_key + "/Requests/").update(
-    //     recv_deliverable);
-    //     return Promise.all([user_update, recv_update]);
-    //     });
-    // });
+        const req_key = push_request.key;
+        var recv_deliverable = {};
+        var user_deliverable = {};
+        recv_deliverable[user_key] = req_key;
+        user_deliverable[recv_key] = req_key;
+        const user_update = admin.database().ref("/Users/" + user_key + "/Requests/").update(
+        user_deliverable);
+        const recv_update = admin.database().ref("/Users/" + recv_key + "/Requests/").update(
+        recv_deliverable);
+        return Promise.all([user_update, recv_update]);
+        });
+    });*/
 
 exports.grabUserFriends = functions.https.onCall((data, context) => {
 
@@ -576,6 +576,178 @@ exports.getPublisherIdeas = functions.https.onCall((data, context) => {
                  Writers: writers,
                  Keys: keys};
     });
+    });
+//handle a request
+exports.handleRequest = functions.https.onCall((data, context) => {
+
+    const response = data.result;
+    const req_id = data.request_id;
+    const requester_id = data.requester_id;
+    const user_id = data.user_id;
+    console.log("L:/", "CALLED_HANDLE_REQUEST", context.auth.uid);
+    if (response === "ACCEPT_REQ") {
+        //add user to each others profile
+        var requester_ref = admin.database().ref("/Users/" + requester_id + "/Permissions/");
+        //writer to editor
+        var user_ref = admin.database().ref("/Users/" + user_id + "/Permissions/");
+        //using true for placeholder value. just need the ids in the folder to know that user has permission
+        requester_ref.child(user_id).set(true);
+        user_ref.child(requester_id).set(true);
+
+        const message_id = requester_id.substring(0, 5) + user_id.substring(0, 5);
+
+        //create messaging services
+
+        var message_ref_user = admin.database().ref("Users/" + user_id +"/Messages/");
+        var message_ref_requester = admin.database().ref("/Users/" + requester_id + "/Messages/");
+        message_ref_user.child(requester_id).set(message_id);
+        message_ref_requester.child(user_id).set(message_id);
+
+        //remove refs to request
+        var requester_req_ref = admin.database().ref("/Users/" + requester_id + "/RequestsSent/" + user_id)
+        .remove();
+        var user_req_ref = admin.database().ref("/Users/" + user_id + "/RequestsReceived/" + requester_id)
+                                          .remove();
+
+        //update status
+        var request_ref = admin.database().ref("/Requests/" + req_id)
+        request_ref.update({status : "STATUS_ACCEPTED"});
+
+    } else if (response === "REJECT_REQ") {
+           var update_req_ref = admin.database().ref("/Requests/" + req_id);
+           update_req_ref.update({status : "STATUS_DENIED"});
+
+    } else {
+        console.log("there was error", "error", "error!");
+    }
+
+});
+exports.buyIdea = functions.https.onCall((data, context) => {
+
+    let updates = {};
+    console.log(data.newPublisherID + "\n" +
+                data.writerID + "\n" +
+                data.writerID);
+
+    updates["Publisher"] = data.newPublisherID;
+
+    const fb = admin.database().ref("/Ideas/" + data.writerID + "/" + data.boughtIdeaID);
+    fb.update(updates);
+//    fb.once('once').then(datasnapshot => {
+//        datasnapshot.val('Publisher') = data.newPublisherID;
+//    });
+    return 0;
+});
+
+
+exports.grabUserRequests = functions.https.onCall((data, context) => {
+
+    const user_id = data.user_id;
+    var names = [];
+    var user_ids = [];
+    var request_ids = [];
+    console.log("L:/", "CALLED_GRAB_USER_REQUESTS", context.auth.uid);
+    const fb = admin.database().ref("/Users/" + user_id + "/RequestsReceived/");
+    var request_data = fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+              var user_id = ds.key;
+              var request_id = ds.val();
+              var other_name = "";
+              user_ids.push(user_id);
+              request_ids.push(request_id);
+
+
+        });
+            return {user_ids: user_ids,
+                                     requests: request_ids};
+        });
+    var receiver_data =  request_data.then(function(result) {
+        result["user_ids"].forEach(user => {
+              admin.database().ref("/Users/" + user).on('value', function(value) {
+
+                               name = value.child("name").val();
+
+                               names.push(name);
+
+
+              }, function(errorObject) {
+                 console.log("Failure: " + errorObject.code);
+              });
+          });
+                return {names: names,
+                };
+          });
+    return Promise.all([request_data, receiver_data]).then(function([result_request, result_recv]) {
+
+            return {names: result_recv["names"],
+
+                    user_ids: result_request["user_ids"],
+                    request_ids: result_request["requests"]};
+    });
+
+
+
+    });
+
+
+exports.checkRequestStatus = functions.https.onCall((data, context) => {
+
+    const request_id = data.request_id;
+    console.log("L:/", "CALLED_CHECK_REQUEST", context.auth.uid);
+    const fb = admin.database().ref("/Requests/" + request_id + "/status/");
+    var request_data = fb.once('value').then(dataSnapshot => {
+        return {status: dataSnapshot.val()};
+    });
+
+});
+
+exports.getRequestId = functions.https.onCall((data, context) => {
+
+    const user_id = data.user_id;
+    const requestee_id = data.requestee_id;
+    console.log("L:/", "CALLED_GET_REQUEST_ID", context.auth.uid);
+    const fb = admin.database().ref("/Users/" + user_id + "/RequestsReceived/" + requestee_id);
+    var request_data = fb.once('value').then(dataSnapshot => {
+        return {request_id: dataSnapshot.val()};
+    });
+
+});
+exports.pushSuggestion = functions.https.onCall((data, context) => {
+    const pub_id = data.pub_id;
+    const comments = data.comments;
+    const author_name = data.author;
+    const idea = data.idea;
+    console.log("L:/", "CALLED_PUSH_SUGG", context.auth.uid);
+    const fb = admin.database().ref("/Users/" + pub_id + "/Suggestions/");
+    const suggestion = {name : author_name,
+                    idea : idea,
+                    comments : comments};
+    fb.push(suggestion);
+
+});
+
+exports.getPublisherIdeas = functions.https.onCall((data, context) => {
+    const query = data.query;
+    var ideas = [];
+    var writers = [];
+    var userID = [];
+    console.log("L:/", "CALLED_GET_PUBLISHER_IDEAS", query);
+    const fb = admin.database().ref("/Ideas/");
+    return fb.once('value').then(dataSnapshot => {
+        dataSnapshot.forEach(ds => {
+            ds.forEach(ds1 =>{
+                var idea = ds1.child("IdeaName").val();
+                var writer = ds1.child("WriterName").val();
+                var userID = ds1.child("Publisher").val();
+                if (query === userID) {
+                    ideas.push(idea);
+                    writers.push(writer);
+                }
+            });
+        });
+         return {Ideas: ideas,
+                 Writers: writers};
+    });
 });
 
 exports.grabUsersFiles = functions.https.onCall((data, context) => {
@@ -615,21 +787,4 @@ exports.getIdeaByID = functions.https.onCall((data, context) => {
         console.log(idea);
         return idea;
     });
-});
-
-exports.buyIdea = functions.https.onCall((data, context) => {
-
-    let updates = {};
-    console.log(data.newPublisherID + "\n" +
-                data.writerID + "\n" +
-                data.writerID);
-
-    updates["Publisher"] = data.newPublisherID;
-
-    const fb = admin.database().ref("/Ideas/" + data.writerID + "/" + data.boughtIdeaID);
-    fb.update(updates);
-//    fb.once('once').then(datasnapshot => {
-//        datasnapshot.val('Publisher') = data.newPublisherID;
-//    });
-    return 0;
-});
+    });

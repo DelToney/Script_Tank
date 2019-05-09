@@ -20,7 +20,7 @@ android {
 }
 
 ext {
-    //Add the playServices version
+
     playServices = "15.0.0"
 }
 

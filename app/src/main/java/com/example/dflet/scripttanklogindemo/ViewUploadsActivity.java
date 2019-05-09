@@ -103,7 +103,7 @@ public class ViewUploadsActivity extends AppCompatActivity {
         //on idea click, open its profile
         mAdapter.setOnItemClickListener(new ViewAdapter.onItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void OnItemClick(int position) {
             Intent intent = new Intent(ViewUploadsActivity.this,
                     IdeaProfile.class);
             intent.putExtra("IdeaID", testItems.get(position).getText2());

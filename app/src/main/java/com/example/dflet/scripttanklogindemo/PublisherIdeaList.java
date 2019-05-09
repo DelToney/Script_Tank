@@ -55,7 +55,7 @@ public class PublisherIdeaList extends AppCompatActivity {
         //on idea click, open its profile
         adapter.setOnItemClickListener(new ViewAdapter.onItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void OnItemClick(int position) {
                 System.out.println(testItems.get(position).getText2());
                 Intent intent = new Intent(PublisherIdeaList.this,
                         IdeaProfile.class);
