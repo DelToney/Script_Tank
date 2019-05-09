@@ -18,12 +18,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".WriterProfileActivity"></activity>
+        <activity android:name=".publisher_profile" />
+        <activity android:name=".PublisherIdeaList" />
+        <activity android:name=".IdeaProfile" />
+       <!-- android:theme="@style/AppTheme"> -->
+        <activity android:name=".PublisherSuggestionActivity"></activity>
+        <activity android:name=".RequestListActivity" />
+
+
         <activity
             android:name=".ViewBoughtIdeasActivity"
             android:label="@string/title_activity_view_bought_ideas"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".IdeaProfile"/>
+
         <activity
             android:name=".EditorRequestList"
             android:label="@string/title_activity_editor_request_list"
@@ -35,12 +42,13 @@
         <activity android:name=".PublisherIdeaList" />
         <activity android:name=".publisher_profile" />
         <activity android:name=".writer_search" />
-        <activity
-            android:name=".SettingsActivity"
-            android:theme="@style/AppTheme" />
+
         <activity android:name=".ChatListActivity" />
-        <activity android:name=".ChatActivity" />
+        <activity
+            android:name=".ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ProfileActivity" />
+
         <activity
             android:name=".ViewUploadsActivity"
             android:label="@string/title_activity_view_uploads"
@@ -77,6 +85,7 @@
         </activity>
         <activity android:name=".LoginActivityST" />
         <activity android:name=".CreateAccountActivity" />
+
 
         <service
             android:name=".DatabaseWriteService"

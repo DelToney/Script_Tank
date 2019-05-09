@@ -39,6 +39,8 @@ public abstract class User implements Serializable {
 
     public String getKey() { return this.key;}
 
+    public String getName() { return this.name;}
+
     public String getToken() { return this.token;}
 
 }

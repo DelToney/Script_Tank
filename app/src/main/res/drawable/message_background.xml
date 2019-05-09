@@ -2,11 +2,15 @@
 <shape
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/messageBackground"
-    android:shape="oval">
+    android:shape="rectangle">
 
     <solid
         android:color="#FFFFFF"
         />
+    <!-- The radius makes the corners rounded -->
+    <corners
+        android:radius="20dp">
+    </corners>
 
     <size
         android:width="200dp"
