@@ -28,6 +28,7 @@ public class PublisherIdeaList extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<String> ideaTitles;
     private ArrayList<String> writers;
+    private ArrayList<String> ideaKeys;
     private ViewAdapter adapter;
     private ArrayList<TestItem> testItems;
     private FirebaseFunctions functions;
@@ -54,10 +55,11 @@ public class PublisherIdeaList extends AppCompatActivity {
         //on idea click, open its profile
         adapter.setOnItemClickListener(new ViewAdapter.onItemClickListener() {
             @Override
-            public void OnItemClick(int position) {
-                myApp.setmCurrentIdeaKey(testItems.get(position).getText2());
+            public void onItemClick(int position) {
+                System.out.println(testItems.get(position).getText2());
                 Intent intent = new Intent(PublisherIdeaList.this,
                         IdeaProfile.class);
+                intent.putExtra("IdeaID", ideaKeys.get(position));
                 startActivity(intent);
             }
         });
@@ -72,9 +74,11 @@ public class PublisherIdeaList extends AppCompatActivity {
                     HashMap<String, Object> results = task.getResult();
                     // Update RecyclerView with results
                     updateListAdapter(results);
+                    // Get and set idea keys
+                    setIdeaKeys(results);
                     // Debug stuff
                     System.out.println(results.size());
-                    System.out.println(results);
+                    System.out.println(results.get("Keys"));
                 } else {
                     // If the firebase fails
                     Exception e = task.getException();
@@ -125,5 +129,9 @@ public class PublisherIdeaList extends AppCompatActivity {
 
         // Notify the adapter that the data has changed, changing the RecyclerView entries
         adapter.notifyDataSetChanged();
+    }
+
+    private void setIdeaKeys(HashMap<String, Object> results){
+        ideaKeys = (ArrayList<String>) results.get("Keys");
     }
 }

@@ -4,28 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_dark_background"
-    tools:context=".IdeaProfile">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/Toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:navigationIcon="@drawable/ic_menu"
-        app:title="Example Idea"
-        app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
-        app:titleTextColor="#FFFFFF"
-        tools:layout_editor_absoluteX="0dp" />
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".IdeaProfile"
+    tools:showIn="@layout/activity_idea_profile">
 
     <TextView
-        android:id="@+id/ideaTitle"
+        android:id="@+id/ideaTitle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -46,7 +30,7 @@
         app:layout_constraintVertical_bias="0.001" />
 
     <ImageView
-        android:id="@+id/writerPicture"
+        android:id="@+id/writerPicture2"
         android:layout_width="143dp"
         android:layout_height="159dp"
         android:layout_below="@+id/toolbar"
@@ -57,7 +41,7 @@
         app:srcCompat="@drawable/ic_person_black_24dp" />
 
     <TextView
-        android:id="@+id/ideaAbstract"
+        android:id="@+id/ideaAbstract2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -73,7 +57,7 @@
         app:layout_constraintVertical_bias="0.01" />
 
     <TextView
-        android:id="@+id/IdeaDescption"
+        android:id="@+id/ideaDescption"
         android:layout_width="398dp"
         android:layout_height="162dp"
         android:layout_marginStart="8dp"
@@ -91,7 +75,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/ProfileButton"
+        android:id="@+id/profileButton"
         android:layout_width="wrap_content"
         android:layout_height="42dp"
         android:layout_marginStart="8dp"
@@ -110,7 +94,7 @@
         app:layout_constraintVertical_bias="0.006" />
 
     <TextView
-        android:id="@+id/authorName"
+        android:id="@+id/authorName2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/writerPicture"
@@ -126,7 +110,7 @@
         app:layout_constraintVertical_bias="0.002" />
 
     <TextView
-        android:id="@+id/genre"
+        android:id="@+id/genre2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -144,27 +128,8 @@
         app:layout_constraintTop_toBottomOf="@+id/authorName"
         app:layout_constraintVertical_bias="0.002" />
 
-    <TextView
-        android:id="@+id/wroth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Worth"
-        android:textColor="@color/colorTextDefault"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.068"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/authorName"
-        app:layout_constraintVertical_bias="0.098" />
-
     <Button
-        android:id="@+id/buyIdeaButton"
+        android:id="@+id/buyIdeaButton2"
         android:layout_width="0dp"
         android:layout_height="76dp"
         android:layout_marginStart="8dp"
@@ -182,5 +147,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/Toolbar"
         app:layout_constraintVertical_bias="1.0" />
-
 </android.support.constraint.ConstraintLayout>

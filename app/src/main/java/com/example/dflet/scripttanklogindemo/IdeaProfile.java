@@ -23,7 +23,7 @@ public class IdeaProfile extends Activity {
 
     protected ScriptTankApplication myApp;
     private static User m_User;
-    private String mIdeaKey;
+    private String mIdeaKey, UserID;
     private TextView mIdeaTitle, mIdeaAbstract, mWriterName, mGenre, mDescription;
 
 
@@ -32,6 +32,7 @@ public class IdeaProfile extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_idea_profile);
         myApp = (ScriptTankApplication) this.getApplicationContext();
+        Intent intent = getIntent();
         m_User = myApp.getM_User();
         myApp.setCurrActivity(this);
 
@@ -42,7 +43,7 @@ public class IdeaProfile extends Activity {
         mGenre = findViewById(R.id.genre);
         mDescription = findViewById(R.id.IdeaDescption);
 
-        mIdeaKey = myApp.getmCurrentIdea().key;
+        mIdeaKey = intent.getStringExtra("IdeaID");
 
         System.out.println(mIdeaKey);
 
@@ -59,20 +60,20 @@ public class IdeaProfile extends Activity {
         GetIdeaInfo(mIdeaKey).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
             @Override
             public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
-                SetIdea(task.getResult());
-//                System.out.println(task.getResult());
+                if (task.isSuccessful()) {
+                    SetIdea(task.getResult());
+                } else {
+                    System.out.println(task.getResult());
+                }
             }
         });
 
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(myApp.getmCurrentIdea());
-                User temp = new User() {};
-                temp.setKey(myApp.getmCurrentIdea().WriterID);
-                myApp.setmCurrentUser(temp);
                 Intent intent = new Intent(IdeaProfile.this,
                         WriterProfileActivity.class);
+                intent.putExtra("UserID", UserID);
                 startActivity(intent);
             }
         });
@@ -99,16 +100,17 @@ public class IdeaProfile extends Activity {
         mWriterName.setText((String)result.get("WriterName"));
         mGenre.setText((String)result.get("Genre"));
         mDescription.setText((String)result.get("Description"));
-        myApp.setmCurrentIdea(new Idea(
-                (String)result.get("IdeaName"),
-                (String)result.get("Abstract"),
-                (String)result.get("Description"),
-                (String)result.get("Genre"),
-                (String)result.get("Length"),
-                (String)result.get("WriterName"),
-                (String)result.get("WriterID"),
-                (String)result.get("Worth")));
-        System.out.println(myApp.getmCurrentIdea().WriterID);
+        UserID = (String)result.get("WriterID");
+//        myApp.setmCurrentIdea(new Idea(
+//                (String)result.get("IdeaName"),
+//                (String)result.get("Abstract"),
+//                (String)result.get("Description"),
+//                (String)result.get("Genre"),
+//                (String)result.get("Length"),
+//                (String)result.get("WriterName"),
+//                (String)result.get("WriterID"),
+//                (String)result.get("Worth")));
+//        System.out.println(myApp.getmCurrentIdea().WriterID);
     }
 
     private Task<HashMap<String, Object>> GetIdeaInfo(String ideaKey) {

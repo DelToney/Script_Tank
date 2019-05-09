@@ -527,6 +527,7 @@ exports.getPublisherIdeas = functions.https.onCall((data, context) => {
     const query = data.query;
     var ideas = [];
     var writers = [];
+    var keys = [];
     var userID = [];
     console.log("L:/", "CALLED_GET_PUBLISHER_IDEAS", query);
     const fb = admin.database().ref("/Ideas/");
@@ -535,15 +536,18 @@ exports.getPublisherIdeas = functions.https.onCall((data, context) => {
             ds.forEach(ds1 =>{
                 var idea = ds1.child("IdeaName").val();
                 var writer = ds1.child("WriterName").val();
+                var mkey = ds1.key;
                 var userID = ds1.child("Publisher").val();
                 if (query === userID) {
                     ideas.push(idea);
                     writers.push(writer);
+                    keys.push(mkey);
                 }
             });
         });
          return {Ideas: ideas,
-                 Writers: writers};
+                 Writers: writers,
+                 Keys: keys};
     });
 });
 
