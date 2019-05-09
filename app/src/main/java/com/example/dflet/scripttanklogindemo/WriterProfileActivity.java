@@ -40,13 +40,13 @@ public class WriterProfileActivity extends AppCompatActivity {
         mDetails = findViewById(R.id.authorDetails);
 
 
-        GetUserInfo(profiledUser.key).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
-                                                                    System.out.println(task.getResult());
-                                                                    UpdateProfileInfo(task.getResult());
-                                                                }
-                                                            }
+        GetUserInfo(m_User.key).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>() {
+                                                          @Override
+                                                          public void onComplete(@NonNull Task<HashMap<String, Object>> task) {
+                                                              System.out.println(task.getResult());
+                                                              UpdateProfileInfo(task.getResult());
+                                                          }
+                                                      }
         );
 
         final Button viewIdeasButton = findViewById(R.id.viewIdeas);
@@ -76,7 +76,7 @@ public class WriterProfileActivity extends AppCompatActivity {
         FirebaseFunctions ff = FirebaseFunctions.getInstance();
 
         return ff
-                .getHttpsCallable("loadUserProfileByKey")
+                .getHttpsCallable("getWriterProfileByKey")
                 .call(data)
                 .continueWith(new Continuation<HttpsCallableResult, HashMap<String, Object>>() {
                     @Override

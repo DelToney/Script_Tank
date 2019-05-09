@@ -19,7 +19,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_menu"
-        app:title="@string/search_titlebar" />
+        app:title="@string/search_titlebar"
+        app:titleTextColor="@color/colorTextDefault" />
 
     <EditText
         android:id="@+id/keywordsSearchBox"

@@ -278,16 +278,21 @@ exports.searchForIdeas = functions.https.onCall((data, context) => {
     const query = data.query;
     var ideas = [];
     var writers = [];
+    var keys = [];
     console.log("L:/", "CALLED_SEARCH_FOR_IDEAS", query);
     const fb = admin.database().ref("/Ideas/");
     return fb.once('value').then(dataSnapshot => {
         dataSnapshot.forEach(ds => {
             ds.forEach(ds1 =>{
+                console.log(query);
                 var idea = ds1.child("IdeaName").val()
                 var writer = ds1.child("WriterName").val();
+                var mkey = ds1.key;
+                console.log(idea);
                 if (idea.includes(query))  {
                     ideas.push(idea);
                     writers.push(writer);
+                    keys.push(mkey);
                 }
         });
 
@@ -295,7 +300,8 @@ exports.searchForIdeas = functions.https.onCall((data, context) => {
 
         });
                 return {Ideas: ideas,
-                        Writers: writers};
+                        Writers: writers,
+                        Keys: keys};
       });
     });
 
@@ -588,4 +594,21 @@ exports.getIdeaByID = functions.https.onCall((data, context) => {
         console.log(idea);
         return idea;
     });
+});
+
+exports.buyIdea = functions.https.onCall((data, context) => {
+
+    let updates = {};
+    console.log(data.newPublisherID + "\n" +
+                data.writerID + "\n" +
+                data.writerID);
+
+    updates["Publisher"] = data.newPublisherID;
+
+    const fb = admin.database().ref("/Ideas/" + data.writerID + "/" + data.boughtIdeaID);
+    fb.update(updates);
+//    fb.once('once').then(datasnapshot => {
+//        datasnapshot.val('Publisher') = data.newPublisherID;
+//    });
+    return 0;
 });
