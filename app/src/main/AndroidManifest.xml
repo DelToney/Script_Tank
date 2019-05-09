@@ -21,19 +21,16 @@
         <activity android:name=".publisher_profile" />
         <activity android:name=".PublisherIdeaList" />
         <activity android:name=".IdeaProfile" />
-        android:theme="@style/AppTheme">
+       <!-- android:theme="@style/AppTheme"> -->
         <activity android:name=".PublisherSuggestionActivity"></activity>
         <activity android:name=".RequestListActivity" />
-        <activity
-            android:name=".SettingsActivity"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".WriterProfileActivity"></activity>
+
+
         <activity
             android:name=".ViewBoughtIdeasActivity"
             android:label="@string/title_activity_view_bought_ideas"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".IdeaProfile"/>
+
         <activity
             android:name=".EditorRequestList"
             android:label="@string/title_activity_editor_request_list"
@@ -43,9 +40,7 @@
             android:name=".SettingsActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".writer_search" />
-        <activity
-            android:name=".SettingsActivity"
-            android:theme="@style/AppTheme" />
+
         <activity android:name=".ChatListActivity" />
         <activity
             android:name=".ChatActivity"
@@ -72,12 +67,7 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity
-            android:name=".EditorListWritersActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".EditorListWritersActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
+
         <activity
             android:name=".EditorListWritersActivity"
             android:windowSoftInputMode="adjustPan" />
@@ -94,7 +84,7 @@
         </activity>
         <activity android:name=".LoginActivityST" />
         <activity android:name=".CreateAccountActivity" />
-        <activity android:name=".ViewUploadsActivity" />
+
 
         <service
             android:name=".DatabaseWriteService"

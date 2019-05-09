@@ -42,10 +42,9 @@ public class HomeActivity extends AppCompatActivity {
     private DrawerLayout m_Layout;
     private NavigationView m_NavigationView;
     private static User m_User;
-    private Button searchButton;
-    private Button publisherIdeaListButton;
+
     private static Editor m_Editor;
-    private TextView editorBoy;
+    private TextView misterMister;
     private ImageView delPic;
     private boolean imgAlreadySet;
 
@@ -65,9 +64,8 @@ public class HomeActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
         m_Layout = findViewById(R.id.drawer_layout);
         m_NavigationView = findViewById(R.id.nav_view);
-        searchButton = findViewById(R.id.searchButton); //Temporary
-        publisherIdeaListButton = findViewById(R.id.listIdeaButton); //Temporary
-//        editorBoy = findViewById(R.id.editorTest);
+        misterMister = findViewById(R.id.greetingsText);
+
         delPic = findViewById(R.id.delPic);
         setNavMenu();
 
@@ -132,49 +130,9 @@ public class HomeActivity extends AppCompatActivity {
                     menuItem.setChecked(false);
                     startActivity(intent);
                     return true;
-                default:
-                    return true;
-                switch (menuItem.getItemId()) {
-                    case R.id.ViewMyFiles:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        Intent intent = new Intent(HomeActivity.this,
-                                ViewUploadsActivity.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
-                    case R.id.IdeasSearch:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        intent = new Intent(HomeActivity.this,
-                               writer_search.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
-                    case R.id.contactWriters:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        intent = new Intent(HomeActivity.this,
-                                EditorListWritersActivity.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
-                    case R.id.sendMessageDrawer:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        intent = new Intent(HomeActivity.this,
-                                ChatListActivity.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
-                    case R.id.settings:
-                        menuItem.setChecked(true);
-                        m_Layout.closeDrawers();
-                        intent = new Intent(HomeActivity.this,
-                                SettingsActivity.class);
-                        menuItem.setChecked(false);
-                        startActivity(intent);
-                        return true;
+
+
+
                     case R.id.PublisherIdeas:
                         menuItem.setChecked(true);
                         m_Layout.closeDrawers();
@@ -202,7 +160,7 @@ public class HomeActivity extends AppCompatActivity {
                     default:
                         return true;
                 }
-            }
+
             }
         });
 
@@ -215,24 +173,9 @@ public class HomeActivity extends AppCompatActivity {
         });
         imgAlreadySet = false;
         checkSettings();
+        misterMister.setText("Greetings, " + m_User.getName() + "\nWelcome to ScriptTank");
 
 
-
-        //This stuff is temporary for publisher testing
-        searchButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                startActivity(new Intent(HomeActivity.this, writer_search.class));
-            }
-        });
-
-        publisherIdeaListButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                startActivity(new Intent(HomeActivity.this, PublisherIdeaList.class));
-            }
-        });
-        //End of temporary stuff
 
     }
 
@@ -260,12 +203,12 @@ public class HomeActivity extends AppCompatActivity {
         if (delIsIdiot) {
             if (!(imgAlreadySet)) {
                 imgAlreadySet = true;
-                editorBoy.setText("Del is Idiot");
+
                 getDelImage();
             }
         } else {
             imgAlreadySet = false;
-            editorBoy.setText("");
+
             delPic.setImageResource(android.R.color.transparent);
         }
     }
@@ -273,6 +216,10 @@ public class HomeActivity extends AppCompatActivity {
     private void logOut() {
         FirebaseAuth.getInstance().signOut();
         this.deleteFile(getString(R.string.user_prof_file_name));
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.edit().clear();
+        sharedPreferences.edit().apply();
         Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
         finish();
@@ -304,7 +251,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setNavMenu() {
         if (m_User == null) {
-            editorBoy.setText("Relaunch App");
+
             //m_NavigationView.inflateHeaderView(R.layout.drawer_header_publisher);
             m_NavigationView.inflateMenu(R.xml.drawer_view_writer);
             return;

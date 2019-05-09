@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +27,7 @@ public class RequestListActivity extends AppCompatActivity implements RequestDia
     private RecyclerView reqList;
     private RequestListAdapter adapter;
     private static ArrayList<String> requestNames, keys, request_ids;
+    private TextView noRequests;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +99,10 @@ public class RequestListActivity extends AppCompatActivity implements RequestDia
         tempKeys = (ArrayList<String>) results.get("user_ids");
         tempNames = (ArrayList<String>) results.get("names");
         tempReqIds = (ArrayList<String>) results.get("request_ids");
+        if (tempKeys.isEmpty() || tempNames.isEmpty() || tempReqIds.isEmpty()) {
+            noRequests = findViewById(R.id.noRequestsTextView);
+            noRequests.setText("You have no requests");
+        }
         if (!(keys.isEmpty()))
             keys.clear();
         if (!(requestNames.isEmpty()))
