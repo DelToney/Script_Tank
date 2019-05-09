@@ -10,17 +10,17 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewAdapterViewHolder> {
+public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.WriterSearchAdapterViewHolder> {
     private ArrayList<WriterSearchResult> mItemList;
     public onItemClickListener mListener;
 
     public interface onItemClickListener {
-        void OnItemClick(int position);
+        void onItemClick(int position);
 
     }
 
     public void setOnItemClickListener(onItemClickListener listener) {
-
+        mListener = listener;
     }
 
 
@@ -29,16 +29,28 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
 
     //view holder: gets values and assigns them for us
-    public class ViewAdapterViewHolder extends RecyclerView.ViewHolder {
+    public static class WriterSearchAdapterViewHolder extends RecyclerView.ViewHolder {
         public ImageView mImageView;
         public TextView mTextView1;
         public TextView mTextView2;
 
-        public ViewAdapterViewHolder(@NonNull View itemView) {
+        public WriterSearchAdapterViewHolder(@NonNull View itemView, final onItemClickListener listener) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.profilePicture);
-            mTextView1 = itemView.findViewById(R.id.ideaTitle);
-            mTextView2 = itemView.findViewById(R.id.authorName);
+            mImageView = itemView.findViewById(R.id.editorPicture);
+            mTextView1 = itemView.findViewById(R.id.line1text);
+            mTextView2 = itemView.findViewById(R.id.line2text);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -50,14 +62,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     @NonNull
 
     @Override
-    public ViewAdapterViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_writer_search_result, parent, false);
-        ViewAdapterViewHolder vavh = new ViewAdapterViewHolder(v);
+    public WriterSearchAdapterViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.placeholder_item, parent, false);
+        WriterSearchAdapterViewHolder vavh = new WriterSearchAdapterViewHolder(v, mListener);
         return vavh;
     }
     //goes through each element and makes a card for each
     @Override
-    public void onBindViewHolder(@NonNull ViewAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull WriterSearchAdapterViewHolder holder, int position) {
         WriterSearchResult currentItem = mItemList.get(position);
 
         holder.mImageView.setImageResource(currentItem.getImageResource());

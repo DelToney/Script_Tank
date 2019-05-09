@@ -1,5 +1,6 @@
 package com.example.dflet.scripttanklogindemo;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -34,6 +35,7 @@ public class writer_search extends AppCompatActivity {
     private FirebaseFunctions functions;
     private ArrayList<String> ideaTitles;
     private ArrayList<String> writers;
+    private ArrayList<String> ideaKeys;
     private ArrayList<WriterSearchResult> writerSearchResults;
     private SearchResultAdapter adapter;
     private WriterSearchResult result;
@@ -78,7 +80,19 @@ public class writer_search extends AppCompatActivity {
             public void onClick(View v){
                 // Clear current search results
                 writerSearchResults.clear();
+                //on idea click, open its profile
+                adapter.setOnItemClickListener(new SearchResultAdapter.onItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        System.out.println(writerSearchResults.get(position).getText2());
+                        Intent intent = new Intent(writer_search.this,
+                                IdeaProfile.class);
+                        intent.putExtra("IdeaID", ideaKeys.get(position));
+                        startActivity(intent);
+                    }
+                });
 
+                System.out.println(keywordBox.getText().toString());
                 // Update RecyclerView with results
                 searchForIdeas(keywordBox.getText().toString()).addOnCompleteListener(new OnCompleteListener<HashMap<String, Object>>(){
                     @Override
@@ -91,6 +105,7 @@ public class writer_search extends AppCompatActivity {
                             HashMap<String, Object> results = task.getResult();
                             // Update RecyclerView with results
                             updateListAdapter(results);
+                            setIdeaKeys(results);
                             // Debug stuff
                             System.out.println(results.size());
                             System.out.println(results);
@@ -148,6 +163,10 @@ public class writer_search extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    private void setIdeaKeys(HashMap<String, Object> results){
+        ideaKeys = (ArrayList<String>) results.get("Keys");
+    }
+
 /*    @Override
     public boolean onOptionsItemSelected(MenuItem item){
         //Opens the side menu
@@ -161,6 +180,3 @@ public class writer_search extends AppCompatActivity {
     }*/
 
 }
-
-// NOTES TO SELF
-// https://us-central1-scripttankdemo.cloudfunctions.net/searchForIdeas

@@ -5,6 +5,9 @@
             android:id="@+id/IdeasSearch"
             android:title="@string/search_drawer" />
         <item
+            android:id="@+id/PublisherIdeas"
+            android:title="@string/publisher_purchased_ideas" />
+        <item
             android:id="@+id/settings"
             android:title="@string/title_activity_settings" />
 

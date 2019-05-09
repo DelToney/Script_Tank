@@ -15,8 +15,12 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_menu"
         app:title="@string/search_titlebar"
-        tools:layout_editor_absoluteX="8dp" />
+        app:titleTextColor="@color/colorTextDefault" />
 
     <EditText
         android:id="@+id/keywordsSearchBox"
@@ -39,11 +43,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/resultsList"
-        android:layout_width="318dp"
-        android:layout_height="465dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
@@ -51,8 +54,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.797" />
+        app:layout_constraintTop_toBottomOf="@+id/keywordsSearchBox"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/button"

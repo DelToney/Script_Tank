@@ -13,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ButtonBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,9 +42,12 @@ public class HomeActivity extends AppCompatActivity {
     private DrawerLayout m_Layout;
     private NavigationView m_NavigationView;
     private static User m_User;
+    private Button searchButton;
+    private Button publisherIdeaListButton;
     private static Editor m_Editor;
     private TextView editorBoy;
     private ImageView delPic;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +64,13 @@ public class HomeActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
         m_Layout = findViewById(R.id.drawer_layout);
         m_NavigationView = findViewById(R.id.nav_view);
-        editorBoy = findViewById(R.id.editorTest);
+        searchButton = findViewById(R.id.searchButton); //Temporary
+        publisherIdeaListButton = findViewById(R.id.listIdeaButton); //Temporary
+//        editorBoy = findViewById(R.id.editorTest);
         delPic = findViewById(R.id.delPic);
         setNavMenu();
+
+        // Side menu options
         m_NavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -125,11 +131,19 @@ public class HomeActivity extends AppCompatActivity {
                     menuItem.setChecked(false);
                     startActivity(intent);
                     return true;
+                    case R.id.PublisherIdeas:
+                        menuItem.setChecked(true);
+                        m_Layout.closeDrawers();
+                        intent = new Intent(HomeActivity.this,
+                                PublisherIdeaList.class);
+                        menuItem.setChecked(false);
+                        startActivity(intent);
                 default:
                     return true;
             }
             }
         });
+
         final Button button = findViewById(R.id.logOutHomeAct);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,14 +151,31 @@ public class HomeActivity extends AppCompatActivity {
                 logOut();
             }
         });
-        checkSettings();
+        //checkSettings();
+
+
+
+        //This stuff is temporary for publisher testing
+        searchButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                startActivity(new Intent(HomeActivity.this, writer_search.class));
+            }
+        });
+
+        publisherIdeaListButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                startActivity(new Intent(HomeActivity.this, PublisherIdeaList.class));
+            }
+        });
+        //End of temporary stuff
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
     }
 
     @Override
@@ -167,7 +198,7 @@ public class HomeActivity extends AppCompatActivity {
             editorBoy.setText("Del is Idiot");
             getDelImage();
         } else {
-            editorBoy.setText("");
+            //editorBoy.setText("");
             delPic.setImageResource(android.R.color.transparent);
         }
     }
