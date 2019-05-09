@@ -432,6 +432,7 @@ exports.getPublisherIdeas = functions.https.onCall((data, context) => {
          return {Ideas: ideas,
                  Writers: writers};
     });
+    });
 //handle a request
 exports.handleRequest = functions.https.onCall((data, context) => {
 
@@ -626,4 +627,4 @@ exports.getIdeaByID = functions.https.onCall((data, context) => {
         console.log(idea);
         return idea;
     });
-});
+    });

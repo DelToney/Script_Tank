@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,8 @@ public class ChatListActivity extends AppCompatActivity {
     private RecyclerView chatList;
     private ChatListAdapater adapter;
     protected ScriptTankApplication myApp;
+
+    private TextView noFriends;
     private static ArrayList<String> chatNames, keys, thread_ids;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,10 @@ public class ChatListActivity extends AppCompatActivity {
         tempKeys = (ArrayList<String>)results.get("keys");
         tempNames = (ArrayList<String>)results.get("friend_names");
         thread_ids = (ArrayList<String>)results.get("threads");
+        if (tempKeys.isEmpty() || tempNames.isEmpty() || thread_ids.isEmpty()) {
+            noFriends = findViewById(R.id.noRequestsTextView);
+            noFriends.setText("You have no friends");
+        }
         if (!(keys.isEmpty()))
             keys.clear();
         if (!(chatNames.isEmpty()))

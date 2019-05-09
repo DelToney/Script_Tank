@@ -97,7 +97,7 @@ public class ViewUploadsActivity extends AppCompatActivity {
         //on idea click, open its profile
         mAdapter.setOnItemClickListener(new ViewAdapter.onItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void OnItemClick(int position) {
             myApp.setmCurrentIdeaKey(testItems.get(position).getText2());
             Intent intent = new Intent(ViewUploadsActivity.this,
                     IdeaProfile.class);
