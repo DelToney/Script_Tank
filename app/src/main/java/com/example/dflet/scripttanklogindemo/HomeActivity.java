@@ -13,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ButtonBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,9 +42,12 @@ public class HomeActivity extends AppCompatActivity {
     private DrawerLayout m_Layout;
     private NavigationView m_NavigationView;
     private static User m_User;
+
     private static Editor m_Editor;
-    private TextView editorBoy;
+    private TextView misterMister;
     private ImageView delPic;
+    private boolean imgAlreadySet;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +64,12 @@ public class HomeActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
         m_Layout = findViewById(R.id.drawer_layout);
         m_NavigationView = findViewById(R.id.nav_view);
-        editorBoy = findViewById(R.id.editorTest);
+        misterMister = findViewById(R.id.greetingsText);
+
         delPic = findViewById(R.id.delPic);
         setNavMenu();
+
+        // Side menu options
         m_NavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -125,11 +130,27 @@ public class HomeActivity extends AppCompatActivity {
                     menuItem.setChecked(false);
                     startActivity(intent);
                     return true;
+                    case R.id.PublisherIdeas:
+                        menuItem.setChecked(true);
+                        m_Layout.closeDrawers();
+                        intent = new Intent(HomeActivity.this,
+                                PublisherIdeaList.class);
+                        menuItem.setChecked(false);
+                        startActivity(intent);
+                case R.id.viewRequestsDrawer:
+                    menuItem.setChecked(true);
+                    m_Layout.closeDrawers();
+                    intent = new Intent(HomeActivity.this,
+                            RequestListActivity.class);
+                    menuItem.setChecked(false);
+                    startActivity(intent);
+                    return true;
                 default:
                     return true;
             }
             }
         });
+
         final Button button = findViewById(R.id.logOutHomeAct);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,14 +158,17 @@ public class HomeActivity extends AppCompatActivity {
                 logOut();
             }
         });
+        imgAlreadySet = false;
         checkSettings();
+        misterMister.setText("Greetings, " + m_User.getName() + "\nWelcome to ScriptTank");
+
+
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
     }
 
     @Override
@@ -164,10 +188,14 @@ public class HomeActivity extends AppCompatActivity {
                 PreferenceManager.getDefaultSharedPreferences(this);
         Boolean delIsIdiot = sharedPreferences.getBoolean("delIsIdiot" , false);
         if (delIsIdiot) {
-            editorBoy.setText("Del is Idiot");
-            getDelImage();
+            if (!(imgAlreadySet)) {
+                imgAlreadySet = true;
+
+                getDelImage();
+            }
         } else {
-            editorBoy.setText("");
+            imgAlreadySet = false;
+
             delPic.setImageResource(android.R.color.transparent);
         }
     }
@@ -175,6 +203,10 @@ public class HomeActivity extends AppCompatActivity {
     private void logOut() {
         FirebaseAuth.getInstance().signOut();
         this.deleteFile(getString(R.string.user_prof_file_name));
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.edit().clear();
+        sharedPreferences.edit().apply();
         Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
         finish();
@@ -206,7 +238,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setNavMenu() {
         if (m_User == null) {
-            editorBoy.setText("Relaunch App");
+
             //m_NavigationView.inflateHeaderView(R.layout.drawer_header_publisher);
             m_NavigationView.inflateMenu(R.xml.drawer_view_writer);
             return;

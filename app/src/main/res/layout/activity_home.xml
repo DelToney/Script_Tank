@@ -16,12 +16,12 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/content_frame">
 
-        <include
-            android:id="@+id/writerLayout"
-            layout="@layout/content_home_writer"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/content_frame" />
+        <!--<include-->
+            <!--android:id="@+id/writerLayout"-->
+            <!--layout="@layout/content_home_writer"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="0dp"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/content_frame" />-->
 
         <Button
             android:id="@+id/logOutHomeAct"
@@ -41,10 +41,12 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.928" />
 
+        
+
 
         <TextView
-            android:id="@+id/editorTest"
-            android:layout_width="wrap_content"
+            android:id="@+id/greetingsText"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
@@ -53,10 +55,13 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:text=""
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.085" />
 
         <ImageView
             android:id="@+id/delPic"
